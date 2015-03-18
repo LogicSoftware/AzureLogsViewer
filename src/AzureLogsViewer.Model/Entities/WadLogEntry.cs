@@ -22,6 +22,7 @@ namespace AzureLogsViewer.Model.Entities
             EventDateTime = entity.EventDateTime;
         }
 
+        public long Id { get; set; }
         public string PartitionKey { get; set; }
         public string RowKey { get; set; }
         public string Role { get; set; }
