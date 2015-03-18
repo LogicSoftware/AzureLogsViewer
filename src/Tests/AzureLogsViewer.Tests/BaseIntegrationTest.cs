@@ -1,6 +1,7 @@
 ﻿using System.Data.Entity;
 using System.Transactions;
 using AzureLogsViewer.Model.Infrastructure;
+using AzureLogsViewer.Model.Services;
 using NUnit.Framework;
 
 namespace AzureLogsViewer.Tests
@@ -9,10 +10,12 @@ namespace AzureLogsViewer.Tests
     {
         private TransactionScope _transactionScope;
 
+        public AlwDataContext DataContext { get; private set; }
+
         [TestFixtureSetUp]
         public void FixtureSetup()
         {
-            Database.SetInitializer(new DropCreateDatabaseIfModelChanges<AlwDataContext>());
+            Database.SetInitializer(new TestDatabaseInitializer());
 
             //create database
             using (var context = new AlwDataContext())
@@ -30,6 +33,10 @@ namespace AzureLogsViewer.Tests
             };
 
             _transactionScope = new TransactionScope(TransactionScopeOption.Required, transactionOptions);
+
+            WadLogsService.UtcNowTestsOverride = null;
+
+            DataContext = new AlwDataContext();
         }
 
         [TearDown]

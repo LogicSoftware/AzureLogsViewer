@@ -7,7 +7,7 @@ using Microsoft.WindowsAzure.Storage;
 
 namespace AzureLogsViewer.Model.WadLogs
 {
-    public class WadLogsReader
+    public class WadLogsReader : IIWadLogsReader
     {
         private string CloudStorageConnectionString
         {

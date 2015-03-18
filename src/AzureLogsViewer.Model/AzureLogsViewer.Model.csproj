@@ -49,9 +49,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Common\TimeRange.cs" />
+    <Compile Include="Entities\WadLogsDumpSettings.cs" />
     <Compile Include="Entities\WadLogEntry.cs" />
     <Compile Include="Infrastructure\AlwDataContext.cs" />
+    <Compile Include="Infrastructure\Configurations\WadLogsDumpSettingsConfiguration.cs" />
     <Compile Include="Infrastructure\Configurations\WadLogEntryConfiguration.cs" />
+    <Compile Include="Services\WadLogsService.cs" />
+    <Compile Include="WadLogs\IIWadLogsReader.cs" />
     <Compile Include="WadLogs\WadLogEntity.cs" />
     <Compile Include="WadLogs\WadLogsReader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -60,9 +65,7 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Services\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
