@@ -2,7 +2,7 @@
 
 namespace AzureLogsViewer.Model.Common
 {
-    public class TimeRange
+    public class DateTimeRange
     {
         public DateTime From { get; set; }
 

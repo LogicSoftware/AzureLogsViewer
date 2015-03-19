@@ -1,4 +1,5 @@
 ﻿using System;
+using AzureLogsViewer.Model.Common;
 using AzureLogsViewer.Model.WadLogs;
 
 namespace AzureLogsViewer.Model.Entities
@@ -33,5 +34,10 @@ namespace AzureLogsViewer.Model.Entities
         public int Tid { get; set; }
         public int EventId { get; set; }
         public DateTime EventDateTime { get; set; }
+
+        public WadLogEntryKey GetKey()
+        {
+            return new WadLogEntryKey(PartitionKey, RowKey);
+        }
     }
 }

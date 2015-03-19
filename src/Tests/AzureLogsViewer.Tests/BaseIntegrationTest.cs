@@ -1,4 +1,5 @@
-﻿using System.Data.Entity;
+﻿using System;
+using System.Data.Entity;
 using System.Transactions;
 using AzureLogsViewer.Model.Infrastructure;
 using AzureLogsViewer.Model.Services;
@@ -35,8 +36,7 @@ namespace AzureLogsViewer.Tests
             _transactionScope = new TransactionScope(TransactionScopeOption.Required, transactionOptions);
 
             WadLogsService.UtcNowTestsOverride = null;
-
-            DataContext = new AlwDataContext();
+            ResetDataContext();
         }
 
         [TearDown]
@@ -44,6 +44,14 @@ namespace AzureLogsViewer.Tests
         {
             //rollback all changes
             _transactionScope.Dispose();
+        }
+
+        protected void ResetDataContext()
+        {
+            if(DataContext != null)
+                DataContext.Dispose();
+
+            DataContext = new AlwDataContext();
         }
     }
 }
