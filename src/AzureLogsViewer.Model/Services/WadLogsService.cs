@@ -34,9 +34,9 @@ namespace AzureLogsViewer.Model.Services
         {
             var range = GetDumpRange();
             var entries = WadLogsReader.Read(range.From, range.To);
-            var oldEntriesHash = GetOldEntriesKeys(range);
+            var existingEntriesKeys = GetExistingEntriesKeys(range);
 
-            var newEntries = entries.Where(x => !oldEntriesHash.Contains(x.GetKey()))
+            var newEntries = entries.Where(x => !existingEntriesKeys.Contains(x.GetKey()))
                                     .ToList();
 
             GetDumpSettings().LatestDumpTime = DateTimeHelper.Min(range.To, UtcNow);
@@ -45,9 +45,9 @@ namespace AzureLogsViewer.Model.Services
             DataContext.SaveChanges();
         }
 
-        private HashSet<WadLogEntryKey> GetOldEntriesKeys(DateTimeRange range)
+        private HashSet<WadLogEntryKey> GetExistingEntriesKeys(DateTimeRange range)
         {
-            var oldEntries =
+            var entryKeys =
                 DataContext.WadLogEntries.Where(x => x.EventDateTime >= range.From && x.EventDateTime <= range.To)
                            .Select(x => new WadLogEntryKey
                            {
@@ -55,7 +55,7 @@ namespace AzureLogsViewer.Model.Services
                                RowKey = x.RowKey
                            }).ToList();
 
-            return new HashSet<WadLogEntryKey>(oldEntries);
+            return new HashSet<WadLogEntryKey>(entryKeys);
         }
 
         private DateTimeRange GetDumpRange()
