@@ -175,6 +175,29 @@ namespace AzureLogsViewer.Tests.ServicesTests
 
         }
 
+        [Test]
+        public void CleanupStaleLogs_should_delete_logs_with_date_less_than_TTL()
+        {
+            //arrange
+            SetDumpSettings(x => x.LogsTTLInDays = 2);
+
+            var entry1 = WadLogEntryBuilder.New().WithEventDate(DateTime.UtcNow).Create();
+            var entry2 = WadLogEntryBuilder.New().WithEventDate(DateTime.UtcNow.AddDays(-1)).Create();
+            var entry3 = WadLogEntryBuilder.New().WithEventDate(DateTime.UtcNow.AddDays(-3)).Create(); // should be deleted
+            var entry4 = WadLogEntryBuilder.New().WithEventDate(DateTime.UtcNow.AddDays(-4)).Create(); // should be deleted
+
+            //act
+            var service = new WadLogsService();
+            service.CleanupStaleLogs();
+            
+            //assert
+            ResetDataContext();
+            var actualEntries = DataContext.WadLogEntries.Select(x => x.Id).ToArray();
+            var expectedEntries = new[] { entry1.Id, entry2.Id };
+
+            Assert.That(actualEntries, Is.EquivalentTo(expectedEntries), "should delete entry3 & entry4");
+        }
+
         private void SetDumpSettings(Action<WadLogsDumpSettings> setters)
         {
             var dumpSettings = DataContext.WadLogsDumpSettings.First();

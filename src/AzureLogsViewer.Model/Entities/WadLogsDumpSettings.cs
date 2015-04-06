@@ -8,6 +8,7 @@ namespace AzureLogsViewer.Model.Entities
         {
             DumpOverlapInMinutes = 5;
             DumpSizeInMinutes = 30;
+            LogsTTLInDays = 14;
         }
 
         public int Id { get; set; }
@@ -17,5 +18,7 @@ namespace AzureLogsViewer.Model.Entities
         public int DumpOverlapInMinutes { get; set; }
 
         public int DumpSizeInMinutes { get; set; }
+
+        public int LogsTTLInDays { get; set; }
     }
 }

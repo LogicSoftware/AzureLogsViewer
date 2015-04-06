@@ -45,6 +45,14 @@ namespace AzureLogsViewer.Model.Services
             DataContext.SaveChanges();
         }
 
+        public void CleanupStaleLogs()
+        {
+            var settings = GetDumpSettings();
+            var date = UtcNow.AddDays(-settings.LogsTTLInDays);
+
+            DataContext.Database.ExecuteSqlCommand("DELETE TOP (10000) FROM WadLogEntries WHERE EventDateTime < @p0", date);
+        }
+
         private HashSet<WadLogEntryKey> GetExistingEntriesKeys(DateTimeRange range)
         {
             var entryKeys =
