@@ -8,12 +8,12 @@ namespace AzureLogsViewer.Model.Services.WorkerTimers
     {
         protected override TimeSpan GetNextDelay(IKernel kernel)
         {
-            return kernel.Get<WadLogsService>().GetDelayBetweenDumps();
+            return kernel.Get<WadLogsDumpService>().GetDelayBetweenDumps();
         }
 
         protected override void Action(IKernel kernel, CancellationToken token)
         {
-            kernel.Get<WadLogsService>().Dump();
+            kernel.Get<WadLogsDumpService>().Dump();
         }
 
         protected override void HandleError(Exception exception)

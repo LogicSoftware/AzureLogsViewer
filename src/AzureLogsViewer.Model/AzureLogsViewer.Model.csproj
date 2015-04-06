@@ -59,6 +59,7 @@
     <Compile Include="Common\DateTimeRange.cs" />
     <Compile Include="Common\EnumerableExtensions.cs" />
     <Compile Include="DIModule.cs" />
+    <Compile Include="Services\WadLogsService.cs" />
     <Compile Include="Services\WorkerTimers\CleanupStaleWadLogsTimer.cs" />
     <Compile Include="Services\WorkerTimers\TimerBase.cs" />
     <Compile Include="Common\WadLogEntryKey.cs" />
@@ -68,7 +69,7 @@
     <Compile Include="Infrastructure\Configurations\WadLogsDumpSettingsConfiguration.cs" />
     <Compile Include="Infrastructure\Configurations\WadLogEntryConfiguration.cs" />
     <Compile Include="Infrastructure\WorkerKernelBuilder.cs" />
-    <Compile Include="Services\WadLogsService.cs" />
+    <Compile Include="Services\WadLogsDumpService.cs" />
     <Compile Include="Services\Worker.cs" />
     <Compile Include="Services\WorkerTimers\DumpWadLogsTimer.cs" />
     <Compile Include="WadLogs\IIWadLogsReader.cs" />

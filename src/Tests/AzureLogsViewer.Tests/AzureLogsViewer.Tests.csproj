@@ -67,7 +67,7 @@
     <Compile Include="Helpers\TimeComparer.cs" />
     <Compile Include="Helpers\WadLogEntryBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ServicesTests\WadLogsServiceTests.cs" />
+    <Compile Include="ServicesTests\WadLogsDumpServiceTests.cs" />
     <Compile Include="TestDatabaseInitializer.cs" />
   </ItemGroup>
   <ItemGroup>

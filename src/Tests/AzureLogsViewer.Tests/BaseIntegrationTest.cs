@@ -44,7 +44,7 @@ namespace AzureLogsViewer.Tests
             //we can make some overrides in di configuration in tests which won't affect each other
             _kernel = new ChildKernel(_mainKernel.Value);
 
-            WadLogsService.UtcNowTestsOverride = null;
+            WadLogsDumpService.UtcNowTestsOverride = null;
             ResetDataContext();
         }
 

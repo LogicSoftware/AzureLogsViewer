@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzureLogsViewer.Tests", "Te
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzureLogsViewer.WorkerConsole", "AzureLogsViewer.WorkerConsole\AzureLogsViewer.WorkerConsole.csproj", "{389EFFA4-7498-462E-9319-28DE28BE1252}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzureLogsViewer.Web", "AzureLogsViewer.Web\AzureLogsViewer.Web.csproj", "{4BB51A05-4630-44FE-AB46-3B7A5B20DE42}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,6 +31,10 @@ Global
 		{389EFFA4-7498-462E-9319-28DE28BE1252}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{389EFFA4-7498-462E-9319-28DE28BE1252}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{389EFFA4-7498-462E-9319-28DE28BE1252}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4BB51A05-4630-44FE-AB46-3B7A5B20DE42}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4BB51A05-4630-44FE-AB46-3B7A5B20DE42}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4BB51A05-4630-44FE-AB46-3B7A5B20DE42}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4BB51A05-4630-44FE-AB46-3B7A5B20DE42}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

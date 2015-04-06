@@ -10,7 +10,7 @@ using NUnit.Framework;
 namespace AzureLogsViewer.Tests.ServicesTests
 {
     [TestFixture]
-    public class WadLogsServiceTests : BaseIntegrationTest
+    public class WadLogsDumpServiceTests : BaseIntegrationTest
     {
         private DateTime Now { get; set; }
 
@@ -20,7 +20,7 @@ namespace AzureLogsViewer.Tests.ServicesTests
             base.SetUp();
 
             Now = DateTime.UtcNow;
-            WadLogsService.UtcNowTestsOverride = Now;
+            WadLogsDumpService.UtcNowTestsOverride = Now;
         }
 
         [Test]
@@ -187,7 +187,7 @@ namespace AzureLogsViewer.Tests.ServicesTests
             var entry4 = WadLogEntryBuilder.New().WithEventDate(DateTime.UtcNow.AddDays(-4)).Create(); // should be deleted
 
             //act
-            GetService<WadLogsService>().CleanupStaleLogs();
+            GetService<WadLogsDumpService>().CleanupStaleLogs();
             
             //assert
             ResetDataContext();
@@ -206,7 +206,7 @@ namespace AzureLogsViewer.Tests.ServicesTests
 
         private void RunDump(WadLogsReaderStub reader)
         {
-            var service = GetService<WadLogsService>();
+            var service = GetService<WadLogsDumpService>();
             service.WadLogsReader = reader;
 
             service.Dump();
