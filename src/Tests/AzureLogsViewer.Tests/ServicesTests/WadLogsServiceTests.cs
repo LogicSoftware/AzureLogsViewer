@@ -187,8 +187,7 @@ namespace AzureLogsViewer.Tests.ServicesTests
             var entry4 = WadLogEntryBuilder.New().WithEventDate(DateTime.UtcNow.AddDays(-4)).Create(); // should be deleted
 
             //act
-            var service = new WadLogsService();
-            service.CleanupStaleLogs();
+            GetService<WadLogsService>().CleanupStaleLogs();
             
             //assert
             ResetDataContext();
@@ -207,10 +206,8 @@ namespace AzureLogsViewer.Tests.ServicesTests
 
         private void RunDump(WadLogsReaderStub reader)
         {
-            var service = new WadLogsService
-            {
-                WadLogsReader = reader
-            };
+            var service = GetService<WadLogsService>();
+            service.WadLogsReader = reader;
 
             service.Dump();
         }

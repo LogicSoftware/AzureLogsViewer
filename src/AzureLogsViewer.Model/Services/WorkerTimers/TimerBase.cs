@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using AzureLogsViewer.Model.Infrastructure;
+using Ninject;
 
-namespace AzureLogsViewer.Model.Common
+namespace AzureLogsViewer.Model.Services.WorkerTimers
 {
     public abstract class TimerBase : IDisposable
     {
@@ -17,9 +19,28 @@ namespace AzureLogsViewer.Model.Common
             get { return _infiniteTask != null; }
         }
 
-        protected abstract TimeSpan GetNextDelay();
+        [Inject]
+        public IKernel Kernel { get; set; }
 
-        protected abstract void Action(CancellationToken token);
+        private TimeSpan GetNextDelay()
+        {
+            try
+            {
+                using (var childKernel = WorkerKernelBuilder.Create(Kernel))
+                {
+                    return GetNextDelay(childKernel);
+                }
+            }
+            catch (Exception ex)
+            {
+                //todo: log ex
+                return TimeSpan.FromMinutes(1); //run every minute if something going wrong..
+            }
+        }
+
+        protected abstract TimeSpan GetNextDelay(IKernel kernel);
+
+        protected abstract void Action(IKernel kernel, CancellationToken token);
 
         protected abstract void HandleError(Exception exception);
 
@@ -27,7 +48,10 @@ namespace AzureLogsViewer.Model.Common
         {
             try
             {
-                Action(token);
+                using (var childKernel = WorkerKernelBuilder.Create(Kernel))
+                {
+                    Action(childKernel, token);
+                }
             }
             catch (Exception ex)
             {

@@ -5,6 +5,7 @@ using AzureLogsViewer.Model.Common;
 using AzureLogsViewer.Model.Entities;
 using AzureLogsViewer.Model.Infrastructure;
 using AzureLogsViewer.Model.WadLogs;
+using Ninject;
 
 namespace AzureLogsViewer.Model.Services
 {
@@ -25,7 +26,7 @@ namespace AzureLogsViewer.Model.Services
             set { _wadLogsReader = value; }
         }
 
-        //TODO : di
+        [Inject]
         public AlwDataContext DataContext { get; set; }
 
         public DateTime UtcNow { get { return UtcNowTestsOverride ?? DateTime.UtcNow; } }
@@ -82,6 +83,12 @@ namespace AzureLogsViewer.Model.Services
         private WadLogsDumpSettings GetDumpSettings()
         {
             return DataContext.WadLogsDumpSettings.First();
+        }
+
+        public TimeSpan GetDelayBetweenDumps()
+        {
+            var settings = GetDumpSettings();
+            return TimeSpan.FromMinutes(settings.DelayBetweenDumpsInMinutes);
         }
     }
 }

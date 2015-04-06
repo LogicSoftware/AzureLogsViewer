@@ -19,5 +19,10 @@ namespace AzureLogsViewer.Model.Infrastructure
 
             base.OnModelCreating(modelBuilder);
         }
+
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+        }
     }
 }

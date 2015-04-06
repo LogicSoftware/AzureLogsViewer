@@ -39,6 +39,12 @@
     <Reference Include="Microsoft.Data.Services.Client, Version=5.6.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.WindowsAzure.Storage, Version=3.0.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.WindowsAzure.StorageClient, Version=1.7.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="Ninject">
+      <HintPath>..\packages\Ninject.3.2.2.0\lib\net45-full\Ninject.dll</HintPath>
+    </Reference>
+    <Reference Include="Ninject.Extensions.ChildKernel">
+      <HintPath>..\packages\Ninject.Extensions.ChildKernel.3.2.0.0\lib\net45-full\Ninject.Extensions.ChildKernel.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
@@ -51,14 +57,20 @@
   <ItemGroup>
     <Compile Include="Common\DateTimeHelper.cs" />
     <Compile Include="Common\DateTimeRange.cs" />
-    <Compile Include="Common\TimerBase.cs" />
+    <Compile Include="Common\EnumerableExtensions.cs" />
+    <Compile Include="DIModule.cs" />
+    <Compile Include="Services\WorkerTimers\CleanupStaleWadLogsTimer.cs" />
+    <Compile Include="Services\WorkerTimers\TimerBase.cs" />
     <Compile Include="Common\WadLogEntryKey.cs" />
     <Compile Include="Entities\WadLogsDumpSettings.cs" />
     <Compile Include="Entities\WadLogEntry.cs" />
     <Compile Include="Infrastructure\AlwDataContext.cs" />
     <Compile Include="Infrastructure\Configurations\WadLogsDumpSettingsConfiguration.cs" />
     <Compile Include="Infrastructure\Configurations\WadLogEntryConfiguration.cs" />
+    <Compile Include="Infrastructure\WorkerKernelBuilder.cs" />
     <Compile Include="Services\WadLogsService.cs" />
+    <Compile Include="Services\Worker.cs" />
+    <Compile Include="Services\WorkerTimers\DumpWadLogsTimer.cs" />
     <Compile Include="WadLogs\IIWadLogsReader.cs" />
     <Compile Include="WadLogs\WadLogEntity.cs" />
     <Compile Include="WadLogs\WadLogsReader.cs" />

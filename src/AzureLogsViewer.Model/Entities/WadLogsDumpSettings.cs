@@ -6,6 +6,7 @@ namespace AzureLogsViewer.Model.Entities
     {
         public WadLogsDumpSettings()
         {
+            DelayBetweenDumpsInMinutes = 15;
             DumpOverlapInMinutes = 5;
             DumpSizeInMinutes = 30;
             LogsTTLInDays = 14;
@@ -18,6 +19,8 @@ namespace AzureLogsViewer.Model.Entities
         public int DumpOverlapInMinutes { get; set; }
 
         public int DumpSizeInMinutes { get; set; }
+
+        public int DelayBetweenDumpsInMinutes { get; set; }
 
         public int LogsTTLInDays { get; set; }
     }
