@@ -5,6 +5,8 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
+using AzureLogsViewer.Web.Code;
+using AzureLogsViewer.Web.Code.Json;
 
 namespace AzureLogsViewer.Web
 {
@@ -16,6 +18,12 @@ namespace AzureLogsViewer.Web
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
+
+            // json handling
+            ValueProviderFactories.Factories.Remove(ValueProviderFactories.Factories.OfType<JsonValueProviderFactory>().Single());
+            ValueProviderFactories.Factories.Add(new JsonNetValueProviderFactory());
+
+            ModelBinders.Binders.DefaultBinder = new AlvDefaultModelBinder();
         }
     }
 }

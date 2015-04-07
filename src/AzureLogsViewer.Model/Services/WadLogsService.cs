@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using AzureLogsViewer.Model.Entities;
 using AzureLogsViewer.Model.Infrastructure;
@@ -11,9 +12,17 @@ namespace AzureLogsViewer.Model.Services
         [Inject]
         public AlwDataContext DataContext { get; set; }
 
-        public IEnumerable<WadLogEntry> GetEntries()
+        public IEnumerable<WadLogEntry> GetEntries(DateTime? from, DateTime? to)
         {
-            return DataContext.WadLogEntries.OrderByDescending(x => x.EventDateTime)
+            IQueryable<WadLogEntry> query = DataContext.WadLogEntries;
+            
+            if (from.HasValue)
+                query = query.Where(x => x.EventDateTime > from);
+
+            if (to.HasValue)
+                query = query.Where(x => x.EventDateTime < to);
+
+            return query.OrderByDescending(x => x.EventDateTime)
                               .Take(100)
                               .ToList();
         }

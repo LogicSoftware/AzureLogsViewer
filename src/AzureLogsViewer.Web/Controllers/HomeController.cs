@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+using System.Text;
 using System.Web.Mvc;
 using AzureLogsViewer.Model.Services;
+using AzureLogsViewer.Web.Code.Json;
 using Ninject;
 
 namespace AzureLogsViewer.Web.Controllers
@@ -15,8 +14,25 @@ namespace AzureLogsViewer.Web.Controllers
 
         public ActionResult Index()
         {
-            var model = WadLogsService.GetEntries();
-            return View(model);
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult GetLogs(DateTime? from, DateTime? to)
+        {
+            var model = WadLogsService.GetEntries(from, to);
+            return Json(model);
+        }
+
+        protected override JsonResult Json(object data, string contentType, Encoding contentEncoding, JsonRequestBehavior behavior)
+        {
+            return new JsonNetResult()
+            {
+                Data = data,
+                ContentType = contentType,
+                ContentEncoding = contentEncoding,
+                JsonRequestBehavior = behavior
+            };
         }
     }
 }

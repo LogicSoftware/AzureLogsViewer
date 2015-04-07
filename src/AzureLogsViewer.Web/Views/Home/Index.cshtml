@@ -3,24 +3,59 @@
     ViewBag.Title = "Home Page";
 }
 
-<div class="row">
+@section scripts
+{
+    <script type="text/javascript">
+        $(function() {
+            window.tableTemplate = _.template($("#u-logs-table").html());
+
+            var vm = new app.LogsViewModel();
+            ko.applyBindings(vm, $("#root")[0]);
+        });
+
+    </script>
+}
+
+<script id="ko-logs-filters" type="text/html">
+    <div id="filters" class="row">
     <div class="col-md-12">
-        <table class="table table-striped table-bordered table-condensed logs-table">
-            <thead>
+        <h3>Filters</h3>
+        <form class="form-inline">
+            <datetimepicker params="value: from, label: 'From'" ></datetimepicker>
+            <datetimepicker params="value: to, label: 'To'" ></datetimepicker>
+        </form>
+    </div>
+</div>    
+</script>
+
+<script id="u-logs-table" type="text/html">
+    <table class="table table-striped table-bordered table-condensed logs-table">
+                <thead>
                 <th>Date</th>
                 <th>Role</th>
                 <th>Level</th>
                 <th>Message</th>
-            </thead>
-            @foreach (var item in Model)
-            {
-                <tr>
-                    <td>@item.EventDateTime</td>
-                    <td>@item.Role</td>
-                    <td>@item.Level</td>
-                    <td><div class="log-message">@item.Message</div></td>
-                </tr>
-            }
-        </table>
-    </div>
+                </thead>
+        
+                <% _.each(logs, function(item) { %> 
+                    <tr>
+                        <td><%= item.eventDateTime %></td>
+                        <td><%= item.role %></td>
+                        <td><%= item.level %></td>
+                        <td><div class="log-message"><%= item.message %></div></td>
+                    </tr>
+                <% }); %>
+                    
+            </table>
+</script>
+
+<div id="root" class="container">
+    <!-- ko template: { name: 'ko-logs-filters', data: filter } -->
+    <!-- /ko -->
+    
+    <div class="row">
+        <div class="col-md-12" data-bind="html: tableTemplate({ logs: logs()})">
+            
+        </div>
+</div>
 </div>

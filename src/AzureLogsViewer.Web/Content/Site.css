@@ -31,3 +31,10 @@ textarea {
     word-wrap: break-word; /* IE */
     max-width: 800px;
 }
+
+#filters {
+    padding-bottom: 20px;
+}
+#filters .input-group.date{
+    width: 280px;
+}
