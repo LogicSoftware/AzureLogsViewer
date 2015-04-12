@@ -11,7 +11,7 @@ namespace AzureLogsViewer.Tests
         {
             base.Seed(context);
 
-            context.WadLogsDumpSettings.AddOrUpdate(x => x.Id, new WadLogsDumpSettings { Id =  1});
+            context.WadLogsDumpSettings.AddOrUpdate(x => x.Id, new WadLogsDumpSettings { Id =  1, StorageConnectionString = "devstorage"});
         }
     }
 }

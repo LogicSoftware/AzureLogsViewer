@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using AzureLogsViewer.Model.Entities;
 using Microsoft.WindowsAzure.Storage;
@@ -9,14 +8,12 @@ namespace AzureLogsViewer.Model.WadLogs
 {
     public class WadLogsReader : IIWadLogsReader
     {
-        private string CloudStorageConnectionString
+        public WadLogsReader(string cloudStorageConnectionString)
         {
-            get
-            {
-                //TODO: get from configuration
-                return File.ReadAllText("c:\\temp\\storagetableconn");
-            }
+            CloudStorageConnectionString = cloudStorageConnectionString;
         }
+
+        private string CloudStorageConnectionString { get; set; }
 
         public List<WadLogEntry> Read(DateTime from, DateTime to)
         {

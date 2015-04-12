@@ -12,19 +12,7 @@ namespace AzureLogsViewer.Model.Services
     public class WadLogsDumpService
     {
         internal static DateTime? UtcNowTestsOverride { get; set; }
-
-        public WadLogsDumpService()
-        {
-            DataContext = new AlvDataContext();
-        }
-
-        private IIWadLogsReader _wadLogsReader;
-
-        public IIWadLogsReader WadLogsReader
-        {
-            get { return _wadLogsReader ?? (_wadLogsReader = new WadLogsReader()); }
-            set { _wadLogsReader = value; }
-        }
+        internal IIWadLogsReader LogsReaderOverride { get; set; }
 
         [Inject]
         public AlvDataContext DataContext { get; set; }
@@ -33,8 +21,15 @@ namespace AzureLogsViewer.Model.Services
 
         public void Dump()
         {
-            var range = GetDumpRange();
-            var entries = WadLogsReader.Read(range.From, range.To);
+            var settings = GetDumpSettings();
+            if(!settings.IsConfigured())
+                return;
+
+            var range = GetDumpRange(settings);
+
+            var logsReader = CreateLogsReader(settings);
+            var entries = logsReader.Read(range.From, range.To);
+
             var existingEntriesKeys = GetExistingEntriesKeys(range);
 
             var newEntries = entries.Where(x => !existingEntriesKeys.Contains(x.GetKey()))
@@ -67,9 +62,8 @@ namespace AzureLogsViewer.Model.Services
             return new HashSet<WadLogEntryKey>(entryKeys);
         }
 
-        private DateTimeRange GetDumpRange()
+        private DateTimeRange GetDumpRange(WadLogsDumpSettings settings)
         {
-            var settings = GetDumpSettings();
             var range = new DateTimeRange();
 
             range.From = settings.LatestDumpTime ?? UtcNow.AddHours(-1);
@@ -85,10 +79,23 @@ namespace AzureLogsViewer.Model.Services
             return DataContext.WadLogsDumpSettings.First();
         }
 
-        public TimeSpan GetDelayBetweenDumps()
+        public TimeSpan GetDelayForNextDump()
         {
             var settings = GetDumpSettings();
+            // if settings is not configured yet we run next try in one minute
+            // because we want start first dump as soon as possible after storage connection string is specified
+            if (!settings.IsConfigured())
+                return TimeSpan.FromMinutes(1);
+
             return TimeSpan.FromMinutes(settings.DelayBetweenDumpsInMinutes);
+        }
+
+        private IIWadLogsReader CreateLogsReader(WadLogsDumpSettings settings)
+        {
+            if(!settings.IsConfigured())
+                throw new ArgumentException("settings should be configured (i.e. has storage connection string)");
+
+            return LogsReaderOverride ?? new WadLogsReader(settings.StorageConnectionString);
         }
     }
 }

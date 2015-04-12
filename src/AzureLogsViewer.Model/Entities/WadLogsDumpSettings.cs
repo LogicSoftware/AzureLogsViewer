@@ -23,5 +23,12 @@ namespace AzureLogsViewer.Model.Entities
         public int DelayBetweenDumpsInMinutes { get; set; }
 
         public int LogsTTLInDays { get; set; }
+
+        public string StorageConnectionString { get; set; }
+
+        public bool IsConfigured()
+        {
+            return !string.IsNullOrWhiteSpace(StorageConnectionString);
+        }
     }
 }

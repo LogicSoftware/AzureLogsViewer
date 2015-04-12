@@ -176,6 +176,29 @@ namespace AzureLogsViewer.Tests.ServicesTests
         }
 
         [Test]
+        public void Dump_should_do_nothing_if_storageconnectionstring_is_not_specified()
+        {
+            //arrange
+            SetDumpSettings(x =>
+            {
+                x.DumpSizeInMinutes = 30;
+                x.LatestDumpTime = Now.AddHours(-0.5);
+                x.StorageConnectionString = null;
+            });
+
+            var reader = WadLogsReaderStub.Create().WithEntryOn(Now.AddHours(-0.2));
+            //act
+            RunDump(reader);
+
+            //assert
+
+            var actualEntries = DataContext.WadLogEntries.Select(x => x.EventDateTime).ToArray();
+            var expectedEntries = new DateTime[] { };
+
+            Assert.That(actualEntries, Is.EquivalentTo(expectedEntries).WithinSeconds(), "should not run reader because storage connection string is not specified");
+        }
+
+        [Test]
         public void CleanupStaleLogs_should_delete_logs_with_date_less_than_TTL()
         {
             //arrange
@@ -197,6 +220,38 @@ namespace AzureLogsViewer.Tests.ServicesTests
             Assert.That(actualEntries, Is.EquivalentTo(expectedEntries), "should delete entry3 & entry4");
         }
 
+        [Test]
+        public void GetDelayForNextDump_should_return_DelayBetweenDumpsInMinutes_from_settings()
+        {
+            //arrange
+            SetDumpSettings(x => x.DelayBetweenDumpsInMinutes = 30);
+
+            //act
+            var timeSpan = GetService<WadLogsDumpService>().GetDelayForNextDump();
+
+            //assert
+
+            Assert.That(timeSpan.TotalMinutes, Is.EqualTo(30));
+        }
+
+        [Test]
+        public void GetDelayForNextDump_should_return_one_minute_is_settings_hasnot_connection_string()
+        {
+            //arrange
+            SetDumpSettings(x =>
+            {
+                x.DelayBetweenDumpsInMinutes = 30;
+                x.StorageConnectionString = null;
+            });
+
+            //act
+            var timeSpan = GetService<WadLogsDumpService>().GetDelayForNextDump();
+
+            //assert
+
+            Assert.That(timeSpan.TotalMinutes, Is.EqualTo(1));
+        }
+
         private void SetDumpSettings(Action<WadLogsDumpSettings> setters)
         {
             var dumpSettings = DataContext.WadLogsDumpSettings.First();
@@ -207,7 +262,7 @@ namespace AzureLogsViewer.Tests.ServicesTests
         private void RunDump(WadLogsReaderStub reader)
         {
             var service = GetService<WadLogsDumpService>();
-            service.WadLogsReader = reader;
+            service.LogsReaderOverride = reader;
 
             service.Dump();
         }
