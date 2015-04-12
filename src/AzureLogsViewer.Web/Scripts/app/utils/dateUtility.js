@@ -42,6 +42,10 @@
 
         addHours: function(source, hours) {
             return new Date(source.getTime() + (hours * 60 * 60 * 1000));
+        },
+
+        formatDateTime: function(dateTime) {
+            return moment(dateTime).format("MMMM Do, HH:mm:ss");
         }
     };
 })();

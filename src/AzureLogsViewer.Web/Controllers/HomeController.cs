@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text;
 using System.Web.Mvc;
+using AzureLogsViewer.Model.DTO;
 using AzureLogsViewer.Model.Services;
 using AzureLogsViewer.Web.Code.Json;
 using Ninject;
@@ -18,9 +19,9 @@ namespace AzureLogsViewer.Web.Controllers
         }
 
         [HttpPost]
-        public ActionResult GetLogs(DateTime? from, DateTime? to)
+        public ActionResult GetLogs(WadLogsFilter filter)
         {
-            var model = WadLogsService.GetEntries(from, to);
+            var model = WadLogsService.GetEntries(filter);
             return Json(model);
         }
 

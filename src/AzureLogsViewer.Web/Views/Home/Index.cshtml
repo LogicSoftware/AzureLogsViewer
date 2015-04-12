@@ -23,6 +23,18 @@
         <form class="form-inline">
             <datetimepicker params="value: from, label: 'From'" ></datetimepicker>
             <datetimepicker params="value: to, label: 'To'" ></datetimepicker>
+            <div class="form-group">
+                <label for="filterRole"  class="control-label">Role</label>
+                <input id="filterRole" type="text" class="form-control" data-bind="value: role">
+            </div>
+            <div class="form-group">
+                <label for="filterLevel" class="control-label">Level</label>
+                <input id="filterLevel" type="text" class="form-control" data-bind="number: level">
+            </div>
+            <div class="form-group">
+                <label for="filterMessage"  class="control-label">Message</label>
+                <input id="filterMessage" type="text" class="form-control" data-bind="value: message">
+            </div>
         </form>
     </div>
 </div>    
@@ -39,7 +51,7 @@
         
                 <% _.each(logs, function(item) { %> 
                     <tr>
-                        <td><%= item.eventDateTime %></td>
+                        <td><%= app.dateUtility.formatDateTime(item.eventDateTime) %></td>
                         <td><%= item.role %></td>
                         <td><%= item.level %></td>
                         <td><div class="log-message"><%= item.message %></div></td>

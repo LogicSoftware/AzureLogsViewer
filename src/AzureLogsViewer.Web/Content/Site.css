@@ -1,4 +1,21 @@
-﻿body {
+﻿@media (min-width: 1400px) {
+    .container {
+        max-width: 1370px;
+    }
+}
+
+@media (min-width: 1600px) {
+    .container {
+        max-width: 1570px;
+    }
+}
+
+.form-inline .form-control {
+    vertical-align: central;
+    width: auto;
+}
+
+body {
     padding-top: 50px;
     padding-bottom: 20px;
 }
@@ -17,11 +34,11 @@
 }
 
 /* Set width on the form input elements since they're 100% wide by default */
-input,
+/*input,
 select,
 textarea {
     max-width: 280px;
-}
+}*/
 
 .logs-table .log-message {
     white-space: pre-wrap; /* CSS3 */
@@ -36,5 +53,17 @@ textarea {
     padding-bottom: 20px;
 }
 #filters .input-group.date{
-    width: 280px;
+    width: 234px;
+}
+
+#filterRole {
+    min-width: 400px;
+}
+
+#filterMessage {
+    min-width: 600px;
+}
+
+#filters .form-group {
+    padding-top: 10px;
 }
