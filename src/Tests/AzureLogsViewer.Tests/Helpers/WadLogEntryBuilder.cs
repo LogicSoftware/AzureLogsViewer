@@ -23,7 +23,7 @@ namespace AzureLogsViewer.Tests.Helpers
 
         public WadLogEntry Create()
         {
-            using (var context = new AlwDataContext())
+            using (var context = new AlvDataContext())
             {
                 context.WadLogEntries.Add(_wadLogEntry);
                 context.SaveChanges();

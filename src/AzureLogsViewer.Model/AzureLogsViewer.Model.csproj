@@ -45,6 +45,9 @@
     <Reference Include="Ninject.Extensions.ChildKernel">
       <HintPath>..\packages\Ninject.Extensions.ChildKernel.3.2.0.0\lib\net45-full\Ninject.Extensions.ChildKernel.dll</HintPath>
     </Reference>
+    <Reference Include="NLog">
+      <HintPath>..\packages\NLog.3.2.0.0\lib\net45\NLog.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
@@ -60,13 +63,14 @@
     <Compile Include="Common\EnumerableExtensions.cs" />
     <Compile Include="DIModule.cs" />
     <Compile Include="DTO\WadLogsFilter.cs" />
+    <Compile Include="Infrastructure\AlvLogger.cs" />
     <Compile Include="Services\WadLogsService.cs" />
     <Compile Include="Services\WorkerTimers\CleanupStaleWadLogsTimer.cs" />
     <Compile Include="Services\WorkerTimers\TimerBase.cs" />
     <Compile Include="Common\WadLogEntryKey.cs" />
     <Compile Include="Entities\WadLogsDumpSettings.cs" />
     <Compile Include="Entities\WadLogEntry.cs" />
-    <Compile Include="Infrastructure\AlwDataContext.cs" />
+    <Compile Include="Infrastructure\AlvDataContext.cs" />
     <Compile Include="Infrastructure\Configurations\WadLogsDumpSettingsConfiguration.cs" />
     <Compile Include="Infrastructure\Configurations\WadLogEntryConfiguration.cs" />
     <Compile Include="Infrastructure\WorkerKernelBuilder.cs" />

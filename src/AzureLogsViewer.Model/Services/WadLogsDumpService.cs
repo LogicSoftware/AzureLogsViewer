@@ -15,7 +15,7 @@ namespace AzureLogsViewer.Model.Services
 
         public WadLogsDumpService()
         {
-            DataContext = new AlwDataContext();
+            DataContext = new AlvDataContext();
         }
 
         private IIWadLogsReader _wadLogsReader;
@@ -27,7 +27,7 @@ namespace AzureLogsViewer.Model.Services
         }
 
         [Inject]
-        public AlwDataContext DataContext { get; set; }
+        public AlvDataContext DataContext { get; set; }
 
         public DateTime UtcNow { get { return UtcNowTestsOverride ?? DateTime.UtcNow; } }
 

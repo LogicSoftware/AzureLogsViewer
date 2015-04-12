@@ -9,7 +9,7 @@ namespace AzureLogsViewer.Model.Infrastructure
         {
             var childKernel = new ChildKernel(kernel);
             //use single data context for worker operation and dispose it immediately after operation was completed.
-            childKernel.Rebind<AlwDataContext>().To<AlwDataContext>().InSingletonScope();
+            childKernel.Rebind<AlvDataContext>().To<AlvDataContext>().InSingletonScope();
 
             return childKernel;
         }

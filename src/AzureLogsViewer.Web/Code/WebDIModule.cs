@@ -8,7 +8,7 @@ namespace AzureLogsViewer.Web.Code
     {
         public override void Load()
         {
-            Kernel.Bind<AlwDataContext>().To<AlwDataContext>().InRequestScope();
+            Kernel.Bind<AlvDataContext>().To<AlvDataContext>().InRequestScope();
         }
     }
 }

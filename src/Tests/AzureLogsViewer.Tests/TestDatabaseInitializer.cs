@@ -5,9 +5,9 @@ using AzureLogsViewer.Model.Infrastructure;
 
 namespace AzureLogsViewer.Tests
 {
-    internal class TestDatabaseInitializer : DropCreateDatabaseIfModelChanges<AlwDataContext>
+    internal class TestDatabaseInitializer : DropCreateDatabaseIfModelChanges<AlvDataContext>
     {
-        protected override void Seed(AlwDataContext context)
+        protected override void Seed(AlvDataContext context)
         {
             base.Seed(context);
 

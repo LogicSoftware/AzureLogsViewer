@@ -6,9 +6,9 @@ using AzureLogsViewer.Model.Infrastructure;
 namespace AzureLogsViewer.WorkerConsole
 {
     //TODO: remove it..
-    internal class TempDatabaseInitializer : DropCreateDatabaseIfModelChanges<AlwDataContext>
+    internal class TempDatabaseInitializer : DropCreateDatabaseIfModelChanges<AlvDataContext>
     {
-        protected override void Seed(AlwDataContext context)
+        protected override void Seed(AlvDataContext context)
         {
             base.Seed(context);
 

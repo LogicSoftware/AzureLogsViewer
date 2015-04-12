@@ -15,10 +15,5 @@ namespace AzureLogsViewer.Model.Services.WorkerTimers
         {
             kernel.Get<WadLogsDumpService>().Dump();
         }
-
-        protected override void HandleError(Exception exception)
-        {
-            //TODO : log error
-        }
     }
 }

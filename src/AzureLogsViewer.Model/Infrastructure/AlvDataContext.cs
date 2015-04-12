@@ -3,10 +3,10 @@ using AzureLogsViewer.Model.Entities;
 
 namespace AzureLogsViewer.Model.Infrastructure
 {
-    public class AlwDataContext : DbContext
+    public class AlvDataContext : DbContext
     {
-        public AlwDataContext()
-            : base("alw")
+        public AlvDataContext()
+            : base("alv")
         {}
 
         public DbSet<WadLogEntry> WadLogEntries { get; set; }
@@ -15,7 +15,7 @@ namespace AzureLogsViewer.Model.Infrastructure
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            modelBuilder.Configurations.AddFromAssembly(typeof (AlwDataContext).Assembly);
+            modelBuilder.Configurations.AddFromAssembly(typeof (AlvDataContext).Assembly);
 
             base.OnModelCreating(modelBuilder);
         }

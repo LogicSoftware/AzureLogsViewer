@@ -17,7 +17,7 @@ namespace AzureLogsViewer.Tests
 
         private TransactionScope _transactionScope;
 
-        public AlwDataContext DataContext { get; private set; }
+        public AlvDataContext DataContext { get; private set; }
 
         [TestFixtureSetUp]
         public void FixtureSetup()
@@ -25,7 +25,7 @@ namespace AzureLogsViewer.Tests
             Database.SetInitializer(new TestDatabaseInitializer());
 
             //create database
-            using (var context = new AlwDataContext())
+            using (var context = new AlvDataContext())
             {
                 context.Database.Initialize(false);
             }
@@ -66,7 +66,7 @@ namespace AzureLogsViewer.Tests
             if(DataContext != null)
                 DataContext.Dispose();
 
-            DataContext = _kernel.Get<AlwDataContext>();
+            DataContext = _kernel.Get<AlvDataContext>();
         }
 
         private static IKernel CreateMainKernel()

@@ -11,7 +11,7 @@ namespace AzureLogsViewer.Model.Services
     public class WadLogsService
     {
         [Inject]
-        public AlwDataContext DataContext { get; set; }
+        public AlvDataContext DataContext { get; set; }
 
         public IEnumerable<WadLogEntry> GetEntries(WadLogsFilter filter)
         {

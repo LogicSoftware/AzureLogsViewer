@@ -33,7 +33,7 @@ namespace AzureLogsViewer.Model.Services.WorkerTimers
             }
             catch (Exception ex)
             {
-                //todo: log ex
+                AlvLogger.LogError(string.Format("Cant read next delay for '{0}' timer", GetType().Name), ex);
                 return TimeSpan.FromMinutes(1); //run every minute if something going wrong..
             }
         }
@@ -42,7 +42,10 @@ namespace AzureLogsViewer.Model.Services.WorkerTimers
 
         protected abstract void Action(IKernel kernel, CancellationToken token);
 
-        protected abstract void HandleError(Exception exception);
+        protected virtual void HandleError(Exception exception)
+        {
+            AlvLogger.LogError(string.Format("Error during execution in '{0}' timer", GetType().Name), exception);
+        }
 
         private void DoWork(CancellationToken token)
         {
