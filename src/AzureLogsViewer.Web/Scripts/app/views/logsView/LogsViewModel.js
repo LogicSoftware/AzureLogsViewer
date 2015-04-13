@@ -10,7 +10,7 @@
     _.extend(LogsViewModel.prototype, {
         _loadData: function() {
             var data = this.filter.toServerModel();
-            app.ajax.postJson("/Home/GetLogs", data)
+            app.ajax.postJson("Home/GetLogs", data)
                .done(_.bind(this._setData, this));
         },
         _setData: function(result) {
