@@ -2,7 +2,7 @@
     var MessageFilterViewModel = function(opts) {
         opts = opts || {};
 
-        this.text = ko.observable("");
+        this.text = ko.observable(opts.text || "");
         this.type = opts.type || "like";
         this.focused = ko.observable(false);
     };

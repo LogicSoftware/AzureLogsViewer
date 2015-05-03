@@ -3,13 +3,14 @@
         this.filter = new app.LogsFilterViewModel();
         this.logs = ko.observable([]);
 
+        this._loadData = _.debounce(_.bind(this._loadDataImpl, this), 10);
         this.filter.subscribe(this._loadData, this);
         this.loading = ko.observable(false);
         this._loadData();
     };
 
     _.extend(LogsViewModel.prototype, {
-        _loadData: function() {
+        _loadDataImpl: function() {
             var data = this.filter.toServerModel();
             if (this._request)
                 this._request.abort();

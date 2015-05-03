@@ -30,6 +30,8 @@
         return JSON.parse(json, reviver);
     };
 
+    app.parseJSON = jsonParse;
+
     app.ajax = {
         postJson: function (url, data, callback) {
             // shift arguments if data argument was omitted

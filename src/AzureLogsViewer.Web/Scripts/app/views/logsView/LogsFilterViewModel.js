@@ -14,6 +14,8 @@
 
         this.messageFilters = ko.observableArray();
 
+        this._tryRestoreFromCookie();
+
         this.addMessageItems = [
             { text: "Add LIKE ", action: _.bind(this.addLikeMessage, this) },
             { text: "Add NOT LIKE ", action: _.bind(this.addNotLikeMessage, this) }
@@ -58,13 +60,34 @@
             this._onChangeCallback = _.bind(callback, context);
         },
 
-        _onChange: function() {
+        _onChange: function () {
+            this._saveToCookie();
             if (this._onChangeCallback)
                 this._onChangeCallback();
         },
 
         toServerModel: function() {
             return this._serverModel();
+        },
+
+        _tryRestoreFromCookie: function() {
+            var serializedFilters = $.cookie('alv_filters');
+            if (serializedFilters) {
+                var filters = app.parseJSON(serializedFilters);
+                _.each(this._filterKeys, function(key) {
+                    this[key](filters[key]);
+                }, this);
+
+                _.each(filters.messageFilters, function(messageFilter) {
+                    this.messageFilters.push(new app.MessageFilterViewModel(messageFilter));
+                }, this);
+            }
+        },
+
+        _saveToCookie: function() {
+            $.cookie('alv_filters', JSON.stringify(this.toServerModel()), {
+                expires: 5
+            }); ;
         }
     });
 
