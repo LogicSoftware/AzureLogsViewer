@@ -67,6 +67,7 @@
     <Compile Include="Helpers\TimeComparer.cs" />
     <Compile Include="Helpers\WadLogEntryBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ServicesTests\SlackIntegrationTests\SlackIntegrationServiceTests.cs" />
     <Compile Include="ServicesTests\WadLogsDumpServiceTests.cs" />
     <Compile Include="TestDatabaseInitializer.cs" />
   </ItemGroup>
@@ -80,6 +81,7 @@
       <Name>AzureLogsViewer.Model</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

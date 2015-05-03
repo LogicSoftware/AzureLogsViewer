@@ -2,51 +2,48 @@
  * Get this code here https://gist.github.com/jogleasonjr/7121367
  */
 
-using Newtonsoft.Json;
 using System;
 using System.Collections.Specialized;
 using System.Net;
 using System.Text;
+using Newtonsoft.Json;
 
-//A simple C# class to post messages to a Slack channel
-//Note: This class uses the Newtonsoft Json.NET serializer available via NuGet
-public class SlackClient
+namespace AzureLogsViewer.Model.Services.SlackIntegration
 {
-    private readonly Uri _uri;
-    private readonly Encoding _encoding = new UTF8Encoding();
-
-    public SlackClient(string urlWithAccessToken)
+    //A simple C# class to post messages to a Slack channel
+    //Note: This class uses the Newtonsoft Json.NET serializer available via NuGet
+    internal class SlackClient : ISlackClient
     {
-        _uri = new Uri(urlWithAccessToken);
-    }
+        private readonly Encoding _encoding = new UTF8Encoding();
 
-    //Post a message using simple strings
-    public void PostMessage(string text, string username = null, string channel = null)
-    {
-        Payload payload = new Payload()
+        //Post a message using simple strings
+        public void PostMessage(string urlWithAccessToken, string text, string channel)
         {
-            Channel = channel,
-            Username = username,
-            Text = text
-        };
+            Payload payload = new Payload()
+            {
+                Channel = channel,
+                Username = null,
+                Text = text
+            };
 
-        PostMessage(payload);
-    }
+            PostMessage(urlWithAccessToken, payload);
+        }
 
-    //Post a message using a Payload object
-    private void PostMessage(Payload payload)
-    {
-        string payloadJson = JsonConvert.SerializeObject(payload);
-
-        using (WebClient client = new WebClient())
+        //Post a message using a Payload object
+        private void PostMessage(string urlWithAccessToken, Payload payload)
         {
-            NameValueCollection data = new NameValueCollection();
-            data["payload"] = payloadJson;
+            string payloadJson = JsonConvert.SerializeObject(payload);
 
-            var response = client.UploadValues(_uri, "POST", data);
+            using (WebClient client = new WebClient())
+            {
+                NameValueCollection data = new NameValueCollection();
+                data["payload"] = payloadJson;
 
-            //The response text is usually "ok"
-            string responseText = _encoding.GetString(response);
+                var response = client.UploadValues(new Uri(urlWithAccessToken), "POST", data);
+
+                //The response text is usually "ok"
+                string responseText = _encoding.GetString(response);
+            }
         }
     }
 }

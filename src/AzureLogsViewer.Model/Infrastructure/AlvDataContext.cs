@@ -11,6 +11,10 @@ namespace AzureLogsViewer.Model.Infrastructure
 
         public DbSet<WadLogEntry> WadLogEntries { get; set; }
 
+        public DbSet<SlackIntegrationInfo> SlackIntegrationInfos { get; set; }
+
+        public DbSet<SlackMessage> SlackMessages { get; set; }
+
         public DbSet<WadLogsDumpSettings> WadLogsDumpSettings { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)

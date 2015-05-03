@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using AzureLogsViewer.Model.Entities;
 
 namespace AzureLogsViewer.Model.DTO
 {
@@ -19,5 +21,34 @@ namespace AzureLogsViewer.Model.DTO
         public string Role { get; set; }
 
         public IEnumerable<MessageFilter> MessageFilters { get; set; }
+
+        public IQueryable<WadLogEntry> Apply(IQueryable<WadLogEntry> query)
+        {
+            if (From.HasValue)
+                query = query.Where(x => x.EventDateTime > From);
+
+            if (To.HasValue)
+                query = query.Where(x => x.EventDateTime < To);
+
+            if (Level.HasValue)
+                query = query.Where(x => x.Level == Level);
+
+            if (!string.IsNullOrWhiteSpace(Role))
+                query = query.Where(x => x.Role == Role);
+
+            foreach (var messageFilter in MessageFilters.Where(x => !string.IsNullOrWhiteSpace(x.Text)))
+            {
+                if (messageFilter.Type == TextFilterType.Like)
+                {
+                    query = query.Where(x => x.Message.Contains(messageFilter.Text));
+                }
+                else
+                {
+                    query = query.Where(x => !x.Message.Contains(messageFilter.Text));
+                }
+            }
+
+            return query;
+        }
     }
 }

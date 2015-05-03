@@ -1,7 +1,7 @@
 ﻿using System.Data.Entity;
 using System.ServiceProcess;
 using AzureLogsViewer.Model;
-using AzureLogsViewer.WorkerConsole;
+using AzureLogsViewer.Model.Migrations;
 using Ninject;
 
 namespace AzureLogsViewer.Worker
@@ -17,8 +17,7 @@ namespace AzureLogsViewer.Worker
 
         protected override void OnStart(string[] args)
         {
-            //TODO: initialize from site ??
-            Database.SetInitializer(new TempDatabaseInitializer());
+            Database.SetInitializer(new MigrationDatabaseInitializer());
 
             var kernel = new StandardKernel();
             kernel.Load(new DIModule());

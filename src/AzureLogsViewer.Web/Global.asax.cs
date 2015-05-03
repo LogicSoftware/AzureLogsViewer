@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Data.Entity;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
+using AzureLogsViewer.Model.Migrations;
 using AzureLogsViewer.Web.Code;
 using AzureLogsViewer.Web.Code.Json;
 
@@ -14,6 +13,8 @@ namespace AzureLogsViewer.Web
     {
         protected void Application_Start()
         {
+            Database.SetInitializer(new MigrationDatabaseInitializer());
+
             AreaRegistration.RegisterAllAreas();
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);

@@ -4,6 +4,7 @@ using System.Linq;
 using AzureLogsViewer.Model.Common;
 using AzureLogsViewer.Model.Entities;
 using AzureLogsViewer.Model.Infrastructure;
+using AzureLogsViewer.Model.Services.SlackIntegration;
 using AzureLogsViewer.Model.WadLogs;
 using Ninject;
 
@@ -16,6 +17,9 @@ namespace AzureLogsViewer.Model.Services
 
         [Inject]
         public AlvDataContext DataContext { get; set; }
+
+        [Inject]
+        public SlackIntegrationService SlackIntegrationService { get; set; }
 
         public DateTime UtcNow { get { return UtcNowTestsOverride ?? DateTime.UtcNow; } }
 
@@ -39,6 +43,13 @@ namespace AzureLogsViewer.Model.Services
 
             DataContext.WadLogEntries.AddRange(newEntries);
             DataContext.SaveChanges();
+
+            ProcessByIntegrations(newEntries);
+        }
+
+        private void ProcessByIntegrations(List<WadLogEntry> newEntries)
+        {
+            SlackIntegrationService.ProcessLogEntries(newEntries);
         }
 
         public void CleanupStaleLogs()

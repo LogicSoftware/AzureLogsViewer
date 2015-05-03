@@ -69,11 +69,26 @@
     <Compile Include="DTO\MessageFilter.cs" />
     <Compile Include="DTO\TextFilterType.cs" />
     <Compile Include="DTO\WadLogsFilter.cs" />
+    <Compile Include="Entities\SlackIntegrationInfo.cs" />
+    <Compile Include="Entities\SlackMessage.cs" />
     <Compile Include="Infrastructure\AlvLogger.cs" />
+    <Compile Include="Migrations\201504122346247_InitialCreate.cs" />
+    <Compile Include="Migrations\201504122346247_InitialCreate.Designer.cs">
+      <DependentUpon>201504122346247_InitialCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201505032245558_SlackIntegration.cs" />
+    <Compile Include="Migrations\201505032245558_SlackIntegration.Designer.cs">
+      <DependentUpon>201505032245558_SlackIntegration.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Migrations\MigrationDatabaseInitializer.cs" />
+    <Compile Include="Services\SlackIntegration\ISlackClient.cs" />
     <Compile Include="Services\SlackIntegration\Payload.cs" />
     <Compile Include="Services\SlackIntegration\SlackClient.cs" />
+    <Compile Include="Services\SlackIntegration\SlackIntegrationService.cs" />
     <Compile Include="Services\WadLogsService.cs" />
     <Compile Include="Services\WorkerTimers\CleanupStaleWadLogsTimer.cs" />
+    <Compile Include="Services\WorkerTimers\SlackIntegrationTimer.cs" />
     <Compile Include="Services\WorkerTimers\TimerBase.cs" />
     <Compile Include="Common\WadLogEntryKey.cs" />
     <Compile Include="Entities\WadLogsDumpSettings.cs" />
@@ -94,7 +109,14 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201504122346247_InitialCreate.resx">
+      <DependentUpon>201504122346247_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201505032245558_SlackIntegration.resx">
+      <DependentUpon>201505032245558_SlackIntegration.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
