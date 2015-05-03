@@ -62,6 +62,8 @@
     <Compile Include="Common\DateTimeRange.cs" />
     <Compile Include="Common\EnumerableExtensions.cs" />
     <Compile Include="DIModule.cs" />
+    <Compile Include="DTO\MessageFilter.cs" />
+    <Compile Include="DTO\TextFilterType.cs" />
     <Compile Include="DTO\WadLogsFilter.cs" />
     <Compile Include="Infrastructure\AlvLogger.cs" />
     <Compile Include="Services\WadLogsService.cs" />

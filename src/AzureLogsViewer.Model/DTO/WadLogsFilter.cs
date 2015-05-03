@@ -1,9 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace AzureLogsViewer.Model.DTO
 {
     public class WadLogsFilter
     {
+        public WadLogsFilter()
+        {
+            MessageFilters = new List<MessageFilter>();
+        }
+
         public DateTime? From { get; set; }
 
         public DateTime? To { get; set; }
@@ -12,6 +18,6 @@ namespace AzureLogsViewer.Model.DTO
 
         public string Role { get; set; }
 
-        public string Message { get; set; }
+        public IEnumerable<MessageFilter> MessageFilters { get; set; }
     }
 }

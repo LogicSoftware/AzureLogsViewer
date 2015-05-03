@@ -46,6 +46,14 @@
 
         formatDateTime: function(dateTime) {
             return moment(dateTime).format("MMMM Do, HH:mm:ss");
+        },
+
+        utcNow: function() {
+            var now = this.now();
+            return new Date(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(),
+                  now.getUTCHours(), now.getUTCMinutes(), now.getUTCSeconds(), now.getUTCMilliseconds());
         }
     };
+
+
 })();

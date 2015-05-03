@@ -67,3 +67,47 @@ textarea {
 #filters .form-group {
     padding-top: 10px;
 }
+
+.min-width-130 {
+    min-width: 130px;
+}
+
+.min-width-500 {
+    min-width: 500px;
+}
+
+.pointer {
+    cursor: pointer;
+}
+
+.msg-like .lbl-msg-notlike {
+    display: none;
+}
+.msg-notlike .lbl-msg-like {
+    display: none;
+}
+
+.msg-like input.form-control {
+    background: rgb(236, 252, 236);
+}
+
+.msg-notlike input.form-control {
+    background: rgb(255, 247, 247);
+}
+
+.loading-overlay {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    z-index: 100;
+    background:url("images/ajax-loade-white-bgr.gif") no-repeat center 50px #fff;
+    background:url("images/ajax-loade-white-bgr.gif") no-repeat center 50px rgba(255,255,255,0.95);
+    -ms-opacity: .7;
+    opacity: .7;
+}
+
+.min-height-100 {
+    min-height: 100px;
+}

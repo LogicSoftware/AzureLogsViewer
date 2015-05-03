@@ -31,9 +31,18 @@
                 <label for="filterLevel" class="control-label">Level</label>
                 <input id="filterLevel" type="text" class="form-control" data-bind="number: level">
             </div>
+            <!-- ko foreach: messageFilters -->
+            <div></div>
+            <div class="form-group" data-bind="css: 'msg-' + type">
+                <label class="control-label min-width-130 lbl-msg-like">Message LIKE</label>
+                <label class="control-label min-width-130 lbl-msg-notlike">Message NOT LIKE</label>
+                <input type="text" class="form-control min-width-500" data-bind="value: text, hasFocus: focused">
+                <span class="glyphicon glyphicon-remove pointer" data-bind="click: $parent.removeMessage"></span>
+            </div>
+            <!-- /ko -->
+            <div></div>
             <div class="form-group">
-                <label for="filterMessage"  class="control-label">Message</label>
-                <input id="filterMessage" type="text" class="form-control" data-bind="value: message">
+                <actionsbtn params="title: 'Add message filter ', items: addMessageItems"></actionsbtn>
             </div>
         </form>
     </div>
@@ -66,8 +75,10 @@
     <!-- /ko -->
     
     <div class="row">
-        <div class="col-md-12" data-bind="html: tableTemplate({ logs: logs()})">
-            
+        
+        <div class="col-md-12 min-height-100">
+            <div class="loading-overlay" data-bind="visible: loading"></div>    
+            <div data-bind="html: tableTemplate({ logs: logs()})"></div>
         </div>
 </div>
 </div>

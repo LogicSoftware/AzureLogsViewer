@@ -9,7 +9,7 @@
                     value: params.value,
                     label: params.label,
                     id: "ko_datepicker_" + counter++
-            };
+                };
                 var $el = $(componentInfo.element).find('.input-group.date');
                 $el.datetimepicker();
                 if (vm.value())

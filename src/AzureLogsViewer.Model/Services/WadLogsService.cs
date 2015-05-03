@@ -29,9 +29,17 @@ namespace AzureLogsViewer.Model.Services
             if (!string.IsNullOrWhiteSpace(filter.Role))
                 query = query.Where(x => x.Role == filter.Role);
 
-            if (!string.IsNullOrWhiteSpace(filter.Message))
-                query = query.Where(x => x.Message.Contains(filter.Message));
-
+            foreach (var messageFilter in filter.MessageFilters.Where(x => !string.IsNullOrWhiteSpace(x.Text)))
+            {
+                if (messageFilter.Type == TextFilterType.Like)
+                {
+                    query = query.Where(x => x.Message.Contains(messageFilter.Text));
+                }
+                else
+                {
+                    query = query.Where(x => !x.Message.Contains(messageFilter.Text));
+                }
+            }
 
             return query.OrderByDescending(x => x.EventDateTime)
                               .Take(1000)
