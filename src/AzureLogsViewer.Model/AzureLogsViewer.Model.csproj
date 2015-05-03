@@ -39,6 +39,10 @@
     <Reference Include="Microsoft.Data.Services.Client, Version=5.6.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.WindowsAzure.Storage, Version=3.0.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.WindowsAzure.StorageClient, Version=1.7.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Newtonsoft.Json.6.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="Ninject">
       <HintPath>..\packages\Ninject.3.2.2.0\lib\net45-full\Ninject.dll</HintPath>
     </Reference>
@@ -66,6 +70,8 @@
     <Compile Include="DTO\TextFilterType.cs" />
     <Compile Include="DTO\WadLogsFilter.cs" />
     <Compile Include="Infrastructure\AlvLogger.cs" />
+    <Compile Include="Services\SlackIntegration\Payload.cs" />
+    <Compile Include="Services\SlackIntegration\SlackClient.cs" />
     <Compile Include="Services\WadLogsService.cs" />
     <Compile Include="Services\WorkerTimers\CleanupStaleWadLogsTimer.cs" />
     <Compile Include="Services\WorkerTimers\TimerBase.cs" />
