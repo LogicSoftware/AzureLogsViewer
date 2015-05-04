@@ -9,7 +9,9 @@
         $(function() {
             window.tableTemplate = _.template($("#u-logs-table").html());
 
-            var vm = new app.LogsViewModel();
+            var vm = new app.LogsViewModel({
+                dataUrl: '@Url.Action("GetLogs", "Home")'
+            });
             ko.applyBindings(vm, $("#root")[0]);
         });
 

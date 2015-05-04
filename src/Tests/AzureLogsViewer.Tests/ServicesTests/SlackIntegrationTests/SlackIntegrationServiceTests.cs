@@ -117,6 +117,19 @@ namespace AzureLogsViewer.Tests.ServicesTests
             Assert.That(messagesCount, Is.EqualTo(0), "should delete sent messages");
         }
 
+        [Test]
+        public void test()
+        {
+            var info = new SlackIntegrationInfo();
+            info.SetFilter(new WadLogsFilter
+            {
+                Level = 2,
+                Role = "LogicSoftware.EasyProjects.SendNotifications"
+            });
+
+            Console.WriteLine(info.SerializedFilter);
+        }
+
         private void CreateStubIntegration(string message, Action<WadLogsFilter> filterSetup = null)
         {
             var integrationInfo = new SlackIntegrationInfo
