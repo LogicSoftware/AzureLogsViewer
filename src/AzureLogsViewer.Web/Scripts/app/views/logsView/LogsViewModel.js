@@ -1,5 +1,6 @@
 ﻿(function() {
-    var LogsViewModel = function () {
+    var LogsViewModel = function (options) {
+        this.dataUrl = options.dataUrl;
         this.filter = new app.LogsFilterViewModel();
         this.logs = ko.observable([]);
 
@@ -16,7 +17,7 @@
                 this._request.abort();
 
             this.loading(true);
-            this._request = app.ajax.postJson("Home/GetLogs", data)
+            this._request = app.ajax.postJson(this.dataUrl, data)
                .done(_.bind(this._setData, this));
         },
         _setData: function (result) {
