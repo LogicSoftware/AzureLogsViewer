@@ -3,14 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using AzureLogsViewer.Model.DTO;
 using AzureLogsViewer.Model.Entities;
-using AzureLogsViewer.Model.Services;
 using AzureLogsViewer.Model.Services.SlackIntegration;
-using AzureLogsViewer.Model.WadLogs;
-using AzureLogsViewer.Tests.Helpers;
 using Moq;
 using NUnit.Framework;
 
-namespace AzureLogsViewer.Tests.ServicesTests
+namespace AzureLogsViewer.Tests.ServicesTests.SlackIntegrationTests
 {
     [TestFixture]
     public class SlackIntegrationServiceTests : BaseIntegrationTest
@@ -116,27 +113,55 @@ namespace AzureLogsViewer.Tests.ServicesTests
             var messagesCount = DataContext.SlackMessages.Count();
             Assert.That(messagesCount, Is.EqualTo(0), "should delete sent messages");
         }
-
+        
         [Test]
-        public void test()
+        public void ProcessLogEntries_should_create_message_should_work_with_multiple_integrations()
         {
-            var info = new SlackIntegrationInfo();
-            info.SetFilter(new WadLogsFilter
+            CreateStubIntegration("{Message}", x => x.Level = 1, chanel: "#chanel1");
+            CreateStubIntegration("{Message}", x => x.Level = 2, chanel: "#chanel2");
+
+            var entries = new List<WadLogEntry>
             {
-                Level = 2,
-                Role = "LogicSoftware.EasyProjects.SendNotifications"
-            });
+                new WadLogEntry {Message = "First", Level = 1},
+                new WadLogEntry {Message = "Second", Level = 2},
+            };
 
-            Console.WriteLine(info.SerializedFilter);
-        }
+            GetService<SlackIntegrationService>().ProcessLogEntries(entries);
 
-        private void CreateStubIntegration(string message, Action<WadLogsFilter> filterSetup = null)
+            var slackMessages = DataContext.SlackMessages.Select(x => new { x.Text, x.Chanel }).ToArray();
+            var expectedMessages = new[]
+            {
+                new { Text = "First", Chanel = "#chanel1"},
+                new { Text = "Second", Chanel = "#chanel2"}
+            };
+
+            CollectionAssert.AreEquivalent(expectedMessages, slackMessages);
+        }  
+        
+        [Test]
+        public void ProcessLogEntries_should_not_create_messages_for_disabled_integrations()
+        {
+            CreateStubIntegration("{Message}", enabled: false);
+
+            var entries = new List<WadLogEntry>
+            {
+                new WadLogEntry {Message = "First", Level = 1}
+            };
+
+            GetService<SlackIntegrationService>().ProcessLogEntries(entries);
+
+            var slackMessagesCount = DataContext.SlackMessages.Count();
+            
+            Assert.That(slackMessagesCount.Equals(0), "service shouldn't generate any message because integration is disabled");
+        }  
+
+        private void CreateStubIntegration(string message, Action<WadLogsFilter> filterSetup = null, string chanel = null, bool enabled = true)
         {
             var integrationInfo = new SlackIntegrationInfo
             {
-                Enabled = true,
+                Enabled = enabled,
                 MessagePattern = message,
-                Chanel = _chanel,
+                Chanel = chanel ?? _chanel,
                 WebHookUrl = _webHookUrl
             };
 

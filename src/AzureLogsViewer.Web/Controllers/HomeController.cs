@@ -1,14 +1,12 @@
 ﻿using System;
-using System.Text;
 using System.Web.Mvc;
 using AzureLogsViewer.Model.DTO;
 using AzureLogsViewer.Model.Services;
-using AzureLogsViewer.Web.Code.Json;
 using Ninject;
 
 namespace AzureLogsViewer.Web.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : AlvBaseController
     {
         [Inject]
         public WadLogsService WadLogsService { get; set; }
@@ -23,17 +21,6 @@ namespace AzureLogsViewer.Web.Controllers
         {
             var model = WadLogsService.GetEntries(filter);
             return Json(model);
-        }
-
-        protected override JsonResult Json(object data, string contentType, Encoding contentEncoding, JsonRequestBehavior behavior)
-        {
-            return new JsonNetResult()
-            {
-                Data = data,
-                ContentType = contentType,
-                ContentEncoding = contentEncoding,
-                JsonRequestBehavior = behavior
-            };
         }
     }
 }

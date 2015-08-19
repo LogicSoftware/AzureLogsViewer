@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using AzureLogsViewer.Model.DTO;
 using AzureLogsViewer.Model.Entities;
 using AzureLogsViewer.Model.Infrastructure;
 using Ninject;
@@ -52,19 +53,21 @@ namespace AzureLogsViewer.Model.Services.SlackIntegration
 
         private void ProcessLogEntriesImpl(List<WadLogEntry> entries)
         {
-            var integrationInfo = DataContext.SlackIntegrationInfos.FirstOrDefault();
-            if (integrationInfo == null || !integrationInfo.Enabled)
+            var integrationInfos = DataContext.SlackIntegrationInfos.Where(x => x.Enabled);
+            var messages = new List<SlackMessage>();
+            foreach (var integrationInfo in integrationInfos)
             {
-                return;
+                var filter = integrationInfo.GetFilter();
+                var matchItems = filter.Apply(entries.AsQueryable());
+
+                messages.AddRange(matchItems.Select(x => CreateMessage(x, integrationInfo)));    
             }
 
-            var filter = integrationInfo.GetFilter();
-            var matchItems = filter.Apply(entries.AsQueryable());
-
-            var messages = matchItems.Select(x => CreateMessage(x, integrationInfo));
-
-            DataContext.SlackMessages.AddRange(messages);
-            DataContext.SaveChanges();
+            if (messages.Any())
+            {
+                DataContext.SlackMessages.AddRange(messages);
+                DataContext.SaveChanges();
+            }
         }
 
         private SlackMessage CreateMessage(WadLogEntry wadLogEntry, SlackIntegrationInfo integrationInfo)
@@ -82,6 +85,25 @@ namespace AzureLogsViewer.Model.Services.SlackIntegration
             };
         }
 
-        
+
+        public IEnumerable<SlackIntegrationInfoModel> GetIntegrationInfos()
+        {
+            return DataContext.SlackIntegrationInfos.ToList()
+                              .Select(x => new SlackIntegrationInfoModel(x))
+                              .ToList();
+        }
+
+        public SlackIntegrationInfoModel Save(SlackIntegrationInfoModel model)
+        {
+            var enity = model.IsPersisted() ? DataContext.SlackIntegrationInfos.Find(model.Id) : new SlackIntegrationInfo();
+            model.ApplyChanges(enity);
+            if (!model.IsPersisted())
+            {
+                DataContext.SlackIntegrationInfos.Add(enity);
+            }
+
+            DataContext.SaveChanges();
+            return new SlackIntegrationInfoModel(enity);
+        }
     }
 }
