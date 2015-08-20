@@ -74,6 +74,7 @@ namespace AzureLogsViewer.Model.Services.SlackIntegration
         private SlackMessage CreateMessage(WadLogEntry wadLogEntry, SlackIntegrationInfo integrationInfo)
         {
             var text = integrationInfo.MessagePattern;
+            text = text.Replace("\\n", Environment.NewLine);
             text = text.Replace("{Date}", wadLogEntry.EventDateTime.ToString("G"));
             text = text.Replace("{Role}", wadLogEntry.Role);
             text = text.Replace("{Level}", wadLogEntry.Level.ToString());
