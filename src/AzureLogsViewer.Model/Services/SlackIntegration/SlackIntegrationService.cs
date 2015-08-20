@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using AzureLogsViewer.Model.DTO;
 using AzureLogsViewer.Model.Entities;
 using AzureLogsViewer.Model.Infrastructure;
@@ -76,7 +77,17 @@ namespace AzureLogsViewer.Model.Services.SlackIntegration
             text = text.Replace("{Date}", wadLogEntry.EventDateTime.ToString("G"));
             text = text.Replace("{Role}", wadLogEntry.Role);
             text = text.Replace("{Level}", wadLogEntry.Level.ToString());
-            text = text.Replace("{Message}", wadLogEntry.Message);
+
+            var messagePattern = new Regex(@"\{Message:?(?<length>\d+)?\}", RegexOptions.Compiled);
+            text = messagePattern.Replace(text, (m) =>
+            {
+                if (string.IsNullOrEmpty(m.Groups["length"].Value))
+                    return wadLogEntry.Message;
+
+                var length = int.Parse(m.Groups["length"].Value);
+                return wadLogEntry.Message.Length > length ? wadLogEntry.Message.Substring(0, length) + "..." : wadLogEntry.Message;
+            });
+
             return new SlackMessage
             {
                 Chanel = integrationInfo.Chanel,

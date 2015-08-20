@@ -54,6 +54,44 @@ namespace AzureLogsViewer.Tests.ServicesTests.SlackIntegrationTests
         }  
         
         [Test]
+        public void ProcessLogEntries_should_truncate_message_if_specified_lenght_less_than_message_lenght()
+        {
+            var date = DateTime.Today.AddDays(-5);
+            CreateStubIntegration("Test {Level}-{Message:5}");
+
+            var entries = new List<WadLogEntry>
+            {
+                new WadLogEntry {Message = "Abcdef", Level = 1, EventDateTime = date, Role = "Web"}
+            };
+
+            GetService<SlackIntegrationService>().ProcessLogEntries(entries);
+
+            var slackMessages = DataContext.SlackMessages.Select(x => x.Text).ToArray();
+            var expectedMessages = new[] { "Test 1-Abcde..." };
+
+            CollectionAssert.AreEquivalent(expectedMessages, slackMessages);
+        }  
+        
+        [Test]
+        public void ProcessLogEntries_should_not_truncate_message_if_specified_lenght_greater_than_message_lenght()
+        {
+            var date = DateTime.Today.AddDays(-5);
+            CreateStubIntegration("Test {Level}-{Message:10}");
+
+            var entries = new List<WadLogEntry>
+            {
+                new WadLogEntry {Message = "Abcdef", Level = 1, EventDateTime = date, Role = "Web"}
+            };
+
+            GetService<SlackIntegrationService>().ProcessLogEntries(entries);
+
+            var slackMessages = DataContext.SlackMessages.Select(x => x.Text).ToArray();
+            var expectedMessages = new[] { "Test 1-Abcdef" };
+
+            CollectionAssert.AreEquivalent(expectedMessages, slackMessages);
+        }  
+        
+        [Test]
         public void ProcessLogEntries_should_set_chanel_and_webhookurl_for_message()
         {
             CreateStubIntegration("{Message}");
