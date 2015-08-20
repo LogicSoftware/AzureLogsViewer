@@ -115,3 +115,9 @@ textarea {
 .row-padding-bottom {
     padding-bottom: 20px;
 }
+
+.msg-notlike input,
+.msg-like input {
+    display: inline-block;
+    max-width: 70%;
+}

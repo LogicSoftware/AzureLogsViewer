@@ -75,13 +75,65 @@
         _.each(["webHookUrl", "chanel", "messagePattern"], function(key) {
             this[key] = ko.observable(data[key] || "");
         }, this);
+
+        this.filter = new FilterViewModel(data.filter || {});
     };
 
     EditViewModel.prototype.toServerModel = function() {
         return _.mapObject(this, function (value) {
+            if (value && value.toServerModel)
+                return value.toServerModel();
+
             return ko.utils.peekObservable(value);
         });
     };
+
+
+    var FilterViewModel = function (data) {
+
+        this.level = ko.observable(data.level || '');
+        this.role = ko.observable(data.role || '');
+
+        this.messageFilters = ko.observableArray(_.map(data.messageFilters || [], function(x) {
+            return new app.MessageFilterViewModel(x);
+        }));
+
+        this.addMessageItems = [
+            { text: "Add LIKE ", action: _.bind(this.addLikeMessage, this) },
+            { text: "Add NOT LIKE ", action: _.bind(this.addNotLikeMessage, this) }
+        ];
+
+        this.removeMessage = _.bind(this._removeMessage, this);
+    };
+
+    _.extend(FilterViewModel.prototype, {
+        addLikeMessage: function () {
+            this.messageFilters.push(new app.MessageFilterViewModel({ type: "like" }));
+            _.last(this.messageFilters()).focused(true);
+        },
+
+        addNotLikeMessage: function () {
+            this.messageFilters.push(new app.MessageFilterViewModel({ type: "notlike" }));
+            _.last(this.messageFilters()).focused(true);
+        },
+
+        _removeMessage: function (messageFilter) {
+            this.messageFilters.remove(messageFilter);
+        },
+
+        toServerModel: function () {
+            var result = {
+                level: this.level(),
+                role: this.role()
+            };
+
+            result.messageFilters = _.map(this.messageFilters(), function (item) {
+                return item.toServerModel();
+            });
+
+            return result;
+        }
+    });
 
     app.SlackIntegrationViewModel = SlackIntegrationViewModel;
 })();

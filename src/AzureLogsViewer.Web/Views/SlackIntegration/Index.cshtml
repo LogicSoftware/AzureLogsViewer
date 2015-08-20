@@ -28,16 +28,18 @@
             <!-- /ko -->
         </div>
     </div>
-    <div class="row">
+    <div class="row" data-bind="'if': !isEditFormVisible()">
         <div class="col-md-12 min-height-100">
             <div class="loading-overlay" data-bind="visible: loading"></div>   
             
             <!-- ko template: { name: 'ko-infos-table', 'if': isListVisible } -->
             <!-- /ko -->
-            
-            <!-- ko template: { name: 'ko-edit-info', 'if': isEditFormVisible, data: editForm } -->
+        </div>
+    </div>
+    <div class="row" data-bind="'if': isEditFormVisible">
+        <div class="col-md-6">
+            <!-- ko template: { name: 'ko-edit-info', data: editForm } -->
             <!-- /ko -->
-
         </div>
     </div>
 </div>
@@ -85,8 +87,37 @@
       <input type="checkbox" data-bind="checked: enabled"> Enabled
     </label>
   </div>
+    <!-- ko template: { name: 'ko-info-filter', data: filter } -->
+    <!-- /ko -->
+   <hr/>
   <button type="button" class="btn btn-primary" data-bind="click: $parent.saveEdit.bind($parent)">Save</button>
   <button type="button" class="btn btn-default" data-bind="click: $parent.cancelEdit.bind($parent)">Cancel</button>
 </form>
     
+</script>
+
+<script id="ko-info-filter" type="text/html">
+    <hr/>
+    <h4>Filters</h4>
+    <div class="form-group">
+        <label for="filterRole"  class="control-label">Role</label>
+        <input id="filterRole" type="text" class="form-control" data-bind="value: role">
+    </div>
+    <div class="form-group">
+        <label for="filterLevel" class="control-label">Level</label>
+        <input id="filterLevel" type="text" class="form-control" data-bind="number: level">
+    </div>
+    <!-- ko foreach: messageFilters -->
+    <div></div>
+    <div class="form-group" data-bind="css: 'msg-' + type">
+        <label class="control-label min-width-130 lbl-msg-like">Message LIKE</label>
+        <label class="control-label min-width-130 lbl-msg-notlike">Message NOT LIKE</label>
+        <input type="text" class="form-control min-width-500" data-bind="value: text, hasFocus: focused">
+        <span class="glyphicon glyphicon-remove pointer" data-bind="click: $parent.removeMessage"></span>
+    </div>
+    <!-- /ko -->
+    <div></div>
+    <div class="form-group">
+        <actionsbtn params="title: 'Add message filter ', items: addMessageItems"></actionsbtn>
+    </div>
 </script>

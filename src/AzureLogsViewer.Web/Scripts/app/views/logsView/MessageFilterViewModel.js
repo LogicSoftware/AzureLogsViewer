@@ -3,7 +3,7 @@
         opts = opts || {};
 
         this.text = ko.observable(opts.text || "");
-        this.type = opts.type || "like";
+        this.type = (opts.type || "like").toLowerCase();
         this.focused = ko.observable(false);
     };
 
