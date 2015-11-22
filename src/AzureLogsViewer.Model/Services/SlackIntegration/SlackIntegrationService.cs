@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Text.RegularExpressions;
 using AzureLogsViewer.Model.DTO;
@@ -11,11 +12,18 @@ namespace AzureLogsViewer.Model.Services.SlackIntegration
 {
     public class SlackIntegrationService
     {
+        private static string _entryUrlFormat;
+
         [Inject]
         public AlvDataContext DataContext { get; set; }
 
         [Inject]
         public ISlackClient Client { get; set; }
+
+        private static string EntryUrlFormat
+        {
+            get { return _entryUrlFormat ?? ( _entryUrlFormat = (ConfigurationManager.AppSettings["SiteUrl"] + "Home/Index/{0}")); }
+        }
 
         public void ProcessLogEntries(List<WadLogEntry> entries)
         {
@@ -78,6 +86,7 @@ namespace AzureLogsViewer.Model.Services.SlackIntegration
             text = text.Replace("{Date}", wadLogEntry.EventDateTime.ToString("G"));
             text = text.Replace("{Role}", wadLogEntry.Role);
             text = text.Replace("{Level}", wadLogEntry.Level.ToString());
+            text = text.Replace("{Link}", string.Format(EntryUrlFormat, wadLogEntry.Id));
 
             var messagePattern = new Regex(@"\{Message:?(?<length>\d+)?\}", RegexOptions.Compiled);
             text = messagePattern.Replace(text, (m) =>

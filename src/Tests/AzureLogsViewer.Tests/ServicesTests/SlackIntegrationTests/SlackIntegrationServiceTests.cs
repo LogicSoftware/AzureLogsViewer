@@ -51,6 +51,25 @@ namespace AzureLogsViewer.Tests.ServicesTests.SlackIntegrationTests
             var expectedMessages = new[] {string.Format("Test {0}-1-Web-First", date.ToString("G"))};
 
             CollectionAssert.AreEquivalent(expectedMessages, slackMessages);
+        }
+        
+        [Test]
+        public void ProcessLogEntries_should_replace_link_with_url_to_this_item()
+        {
+            var date = DateTime.Today.AddDays(-5);
+            CreateStubIntegration("Test {Message}, {Link}");
+
+            var entries = new List<WadLogEntry>
+            {
+                new WadLogEntry { Id = 25, Message = "First", Level = 1, EventDateTime = date, Role = "Web"}
+            };
+
+            GetService<SlackIntegrationService>().ProcessLogEntries(entries);
+
+            var slackMessages = DataContext.SlackMessages.Select(x => x.Text).ToArray();
+            var expectedMessages = new[] { "Test First, http://mydomain.com/Home/Index/25"};
+
+            CollectionAssert.AreEquivalent(expectedMessages, slackMessages);
         }  
         
         [Test]

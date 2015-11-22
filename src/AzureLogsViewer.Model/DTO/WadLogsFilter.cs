@@ -12,6 +12,8 @@ namespace AzureLogsViewer.Model.DTO
             MessageFilters = new List<MessageFilter>();
         }
 
+        public int? Id { get; set; }
+
         public DateTime? From { get; set; }
 
         public DateTime? To { get; set; }
@@ -24,6 +26,12 @@ namespace AzureLogsViewer.Model.DTO
 
         public IQueryable<WadLogEntry> Apply(IQueryable<WadLogEntry> query)
         {
+            //ignone all other filters if id was specified
+            if (Id.HasValue)
+            {
+                return query.Where(x => x.Id == Id.Value);
+            }
+
             if (From.HasValue)
                 query = query.Where(x => x.EventDateTime > From);
 

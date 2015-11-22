@@ -1,4 +1,4 @@
-﻿@model IEnumerable<AzureLogsViewer.Model.Entities.WadLogEntry>
+﻿@model AzureLogsViewer.Web.Models.LogsPageModel
 @{
     ViewBag.Title = "Home Page";
 }
@@ -10,7 +10,8 @@
             window.tableTemplate = _.template($("#u-logs-table").html());
 
             var vm = new app.LogsViewModel({
-                dataUrl: '@Url.Action("GetLogs", "Home")'
+                dataUrl: '@Url.Action("GetLogs", "Home")',
+                id: @(Model.Id.HasValue ? Model.Id.ToString() : "null")
             });
             ko.applyBindings(vm, $("#root")[0]);
         });

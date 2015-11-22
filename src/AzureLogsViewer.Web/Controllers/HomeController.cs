@@ -2,6 +2,7 @@
 using System.Web.Mvc;
 using AzureLogsViewer.Model.DTO;
 using AzureLogsViewer.Model.Services;
+using AzureLogsViewer.Web.Models;
 using Ninject;
 
 namespace AzureLogsViewer.Web.Controllers
@@ -11,9 +12,13 @@ namespace AzureLogsViewer.Web.Controllers
         [Inject]
         public WadLogsService WadLogsService { get; set; }
 
-        public ActionResult Index()
+        public ActionResult Index(int? id)
         {
-            return View();
+            var model = new LogsPageModel
+            {
+                Id = id
+            };
+            return View(model);
         }
 
         [HttpPost]
