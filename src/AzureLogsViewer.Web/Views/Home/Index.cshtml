@@ -8,6 +8,9 @@
     <script type="text/javascript">
         $(function() {
             window.tableTemplate = _.template($("#u-logs-table").html());
+            window.getLogItemUrl = function(item) {
+                return '@Url.Action("Index", "Home", new { id = (int?)null })Home/Index/' + item.id;
+            };
 
             var vm = new app.LogsViewModel({
                 dataUrl: '@Url.Action("GetLogs", "Home")',
@@ -63,7 +66,7 @@
         
                 <% _.each(logs, function(item) { %> 
                     <tr>
-                        <td><%= app.dateUtility.formatDateTime(item.eventDateTime) %></td>
+                        <td><a href="<%= getLogItemUrl(item) %>" target="_blank"><%= app.dateUtility.formatDateTime(item.eventDateTime) %></a></td>
                         <td><%= item.role %></td>
                         <td><%= item.level %></td>
                         <td><div class="log-message"><%= item.message %></div></td>
