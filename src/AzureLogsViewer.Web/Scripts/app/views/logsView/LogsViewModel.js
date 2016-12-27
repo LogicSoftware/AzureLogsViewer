@@ -9,6 +9,14 @@
         this.filter.subscribe(this._loadData, this);
         this.loading = ko.observable(false);
         this._loadData();
+
+        this.affectedUsersMsg = ko.observable(null);
+        this.isAffectedUsersVisible = ko.pureComputed(function() {
+            return this.affectedUsersMsg() !== null;
+        }, this);
+        this.toggleAffectedUsersBtnTitle = ko.pureComputed(function() {
+            return this.isAffectedUsersVisible() ? "Hide affected users" : "Show afffected users";
+        }, this);
     };
 
     _.extend(LogsViewModel.prototype, {
@@ -35,6 +43,47 @@
             this.loading(false);
 
             this.logs(result);
+        },
+
+        toggleAffectedUsersMsg: function () {
+
+            if (this.isAffectedUsersVisible()) {
+                this.affectedUsersMsg(null);
+                return;
+            }
+
+            var result = {};
+            var regex = /UserId =(\d*), Login =.*\n\s*AccountId=(\d*),/gi;
+            _.each(this.logs(), function(log) {
+                var match = regex.exec(log.message);
+                if (match) {
+
+                    var userId = match[1];
+                    var accountId = match[2];
+                    var key = accountId + "_" + userId;
+
+                    if (!result[key]) {
+                        result[key] = {
+                            userId: userId,
+                            accountId: accountId
+                        };
+                    }
+                }
+            });
+
+            var users = _.chain(result)
+                        .values()
+                        .map(function(x) {
+                            return "( u.AccountId = " + x.accountId + " AND u.UserId = " + x.userId + ")";
+                        })
+                        .value();
+
+            var msg = users.join(" OR <br />");
+            if (!msg) {
+                msg = "1 = 0";
+            }
+            this.affectedUsersMsg(msg);
+
         }
     });
 

@@ -50,6 +50,9 @@
             <div class="form-group">
                 <actionsbtn params="title: 'Add message filter ', items: addMessageItems"></actionsbtn>
             </div>
+            <div class="btn btn-primary float-right"
+                 data-bind="click: $parent.toggleAffectedUsersMsg.bind($parent),
+                            text: $parent.toggleAffectedUsersBtnTitle">Show affected users</div>
         </form>
     </div>
 </div>    
@@ -79,9 +82,18 @@
 <div id="root" class="container">
     <!-- ko template: { name: 'ko-logs-filters', data: filter } -->
     <!-- /ko -->
-    
+    <div class="row" data-bind="visible: isAffectedUsersVisible">
+        <blockquote>
+            <code>
+                <span>SELECT a.Name as AccountName, u.Name as UserName, u.Email as Email</span><br />
+                <span>  FROM TT_Users as u</span><br />
+                <span>  INNER JOIN TT_Accounts as a on a.AccountId = u.AccountId</span><br />
+                <span>  WHERE</span><br />
+                <span data-bind="html: affectedUsersMsg"></span>
+            </code>
+        </blockquote>
+    </div>
     <div class="row">
-        
         <div class="col-md-12 min-height-100">
             <div class="loading-overlay" data-bind="visible: loading"></div>    
             <div data-bind="html: tableTemplate({ logs: logs()})"></div>

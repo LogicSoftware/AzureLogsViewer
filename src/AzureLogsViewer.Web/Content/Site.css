@@ -121,3 +121,7 @@ textarea {
     display: inline-block;
     max-width: 70%;
 }
+
+.float-right {
+    float: right;
+}
