@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using AzureLogsViewer.Model.DTO;
 using AzureLogsViewer.Model.Entities;
@@ -15,7 +14,7 @@ namespace AzureLogsViewer.Model.Services
 
         public IEnumerable<WadLogEntry> GetEntries(WadLogsFilter filter)
         {
-            IQueryable<WadLogEntry> query = DataContext.WadLogEntries;
+            IQueryable<WadLogEntry> query = DataContext.WadLogEntries.AsNoTracking();
 
             query = filter.Apply(query);
             

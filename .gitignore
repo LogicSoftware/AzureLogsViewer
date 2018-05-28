@@ -18,3 +18,4 @@ UpgradeLog*.htm
 BlankTests.cs
 csx
 rcf
+.vs

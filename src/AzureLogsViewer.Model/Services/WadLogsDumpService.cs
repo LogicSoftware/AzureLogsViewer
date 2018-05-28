@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.Entity;
+using System.Data.SqlClient;
 using System.Linq;
 using AzureLogsViewer.Model.Common;
 using AzureLogsViewer.Model.Entities;
@@ -41,10 +44,46 @@ namespace AzureLogsViewer.Model.Services
 
             GetDumpSettings().LatestDumpTime = DateTimeHelper.Min(range.To, UtcNow);
 
-            DataContext.WadLogEntries.AddRange(newEntries);
+            BulkInsert(newEntries);
+
             DataContext.SaveChanges();
 
             ProcessByIntegrations(newEntries);
+        }
+
+        private void BulkInsert(List<WadLogEntry> newEntries)
+        {
+            SqlBulkCopy copy = new SqlBulkCopy(DataContext.Database.Connection.ConnectionString);
+            copy.DestinationTableName = "WadLogEntries";
+
+            var columns = typeof(WadLogEntry).GetProperties().Where(x => x.Name != nameof(WadLogEntry.Id)).ToList();
+            var dataTable = new DataTable();
+
+            foreach (var column in columns)
+            {
+                copy.ColumnMappings.Add(column.Name, column.Name);
+                dataTable.Columns.Add(column.Name, column.PropertyType);
+            }
+            
+            foreach (var entry in newEntries)
+            {
+                var row = dataTable.NewRow();
+                row[nameof(WadLogEntry.EventDateTime)] = entry.EventDateTime;
+                row[nameof(WadLogEntry.EventId)] = entry.EventId;
+                row[nameof(WadLogEntry.Level)] = entry.Level;
+                row[nameof(WadLogEntry.Message)] = entry.Message;
+                row[nameof(WadLogEntry.PartitionKey)] = entry.PartitionKey;
+                row[nameof(WadLogEntry.Pid)] = entry.Pid;
+                row[nameof(WadLogEntry.Role)] = entry.Role;
+                row[nameof(WadLogEntry.RoleInstance)] = entry.RoleInstance;
+                row[nameof(WadLogEntry.RowKey)] = entry.RowKey;
+                row[nameof(WadLogEntry.Tid)] = entry.Tid;
+
+                dataTable.Rows.Add(row);
+            }
+
+
+            copy.WriteToServer(dataTable.Rows.Cast<DataRow>().ToArray());
         }
 
         private void ProcessByIntegrations(List<WadLogEntry> newEntries)
@@ -63,7 +102,8 @@ namespace AzureLogsViewer.Model.Services
         private HashSet<WadLogEntryKey> GetExistingEntriesKeys(DateTimeRange range)
         {
             var entryKeys =
-                DataContext.WadLogEntries.Where(x => x.EventDateTime >= range.From && x.EventDateTime <= range.To)
+                DataContext.WadLogEntries.AsNoTracking()
+                           .Where(x => x.EventDateTime >= range.From && x.EventDateTime <= range.To)
                            .Select(x => new WadLogEntryKey
                            {
                                PartitionKey = x.PartitionKey,
