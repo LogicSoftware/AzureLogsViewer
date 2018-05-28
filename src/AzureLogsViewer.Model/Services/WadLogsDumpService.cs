@@ -83,7 +83,7 @@ namespace AzureLogsViewer.Model.Services
             }
 
 
-            copy.WriteToServer(dataTable.Rows.Cast<DataRow>().ToArray());
+            copy.WriteToServer(dataTable);
         }
 
         private void ProcessByIntegrations(List<WadLogEntry> newEntries)
