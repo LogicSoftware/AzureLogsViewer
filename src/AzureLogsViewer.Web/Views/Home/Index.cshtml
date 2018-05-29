@@ -87,7 +87,7 @@
             <code>
                 <span>SELECT a.Name as AccountName, u.Name as UserName, u.Email as Email</span><br />
                 <span>  FROM TT_Users as u</span><br />
-                <span>  INNER JOIN TT_Accounts as a on a.AccountId = u.AccountId</span><br />
+                <span>  INNER JOIN TT_Accounts as a on a.Id = u.AccountId</span><br />
                 <span>  WHERE</span><br />
                 <span data-bind="html: affectedUsersMsg"></span>
             </code>
