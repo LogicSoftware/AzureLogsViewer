@@ -82,7 +82,7 @@ namespace AzureLogsViewer.Model.Services.SlackIntegration
 
         private void BulkInsert(List<SlackMessage> messages)
         {
-            SqlBulkCopy copy = new SqlBulkCopy(DataContext.Database.Connection.ConnectionString);
+            var copy = new SqlBulkCopy(ConfigurationManager.ConnectionStrings["alv"].ConnectionString);
             copy.DestinationTableName = "SlackMessages";
 
             var columns = typeof(SlackMessage).GetProperties().Where(x => x.Name != nameof(SlackMessage.Id)).ToList();

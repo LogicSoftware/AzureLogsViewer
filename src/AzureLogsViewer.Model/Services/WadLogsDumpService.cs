@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
 using System.Data.Entity;
 using System.Data.SqlClient;
@@ -59,7 +60,7 @@ namespace AzureLogsViewer.Model.Services
 
         private void BulkInsert(List<WadLogEntry> newEntries)
         {
-            SqlBulkCopy copy = new SqlBulkCopy(DataContext.Database.Connection.ConnectionString);
+            var copy = new SqlBulkCopy(ConfigurationManager.ConnectionStrings["alv"].ConnectionString);
             copy.DestinationTableName = "WadLogEntries";
 
             var columns = typeof(WadLogEntry).GetProperties().Where(x => x.Name != nameof(WadLogEntry.Id)).ToList();
