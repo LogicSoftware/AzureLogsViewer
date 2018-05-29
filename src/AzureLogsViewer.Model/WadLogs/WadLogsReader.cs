@@ -8,12 +8,14 @@ namespace AzureLogsViewer.Model.WadLogs
 {
     public class WadLogsReader : IIWadLogsReader
     {
-        public WadLogsReader(string cloudStorageConnectionString)
+        private readonly WadLogsStorageSettings _settings;
+
+        public WadLogsReader(WadLogsStorageSettings settings)
         {
-            CloudStorageConnectionString = cloudStorageConnectionString;
+            _settings = settings;
         }
 
-        private string CloudStorageConnectionString { get; set; }
+        private string CloudStorageConnectionString => _settings.StorageConnectionString;
 
         public List<WadLogEntry> Read(DateTime from, DateTime to)
         {
@@ -28,7 +30,7 @@ namespace AzureLogsViewer.Model.WadLogs
                         String.Compare(wl.PartitionKey, "0" + to.Ticks.ToString()) < 0
                 )
                 .ToList()
-                .Select(x => new WadLogEntry(x))
+                .Select(x => new WadLogEntry(x, _settings))
                 .ToList();
         }
     }

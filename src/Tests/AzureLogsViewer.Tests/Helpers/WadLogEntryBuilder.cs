@@ -10,7 +10,10 @@ namespace AzureLogsViewer.Tests.Helpers
 
         private WadLogEntryBuilder()
         {
-            _wadLogEntry = new WadLogEntry();
+            _wadLogEntry = new WadLogEntry()
+            {
+                StorageId = 1
+            };
         }
 
         public WadLogEntryBuilder WithEventDate(DateTime date)

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace AzureLogsViewer.Model.Entities
 {
@@ -14,8 +15,6 @@ namespace AzureLogsViewer.Model.Entities
 
         public int Id { get; set; }
 
-        public DateTime? LatestDumpTime { get; set; }
-
         public int DumpOverlapInMinutes { get; set; }
 
         public int DumpSizeInMinutes { get; set; }
@@ -24,11 +23,13 @@ namespace AzureLogsViewer.Model.Entities
 
         public int LogsTTLInDays { get; set; }
 
-        public string StorageConnectionString { get; set; }
+        public virtual ICollection<WadLogsStorageSettings> Storages { get; set; }
+
+        public IEnumerable<WadLogsStorageSettings> ConfiguredStorages() => Storages.Where(x => x.IsConfigured());
 
         public bool IsConfigured()
         {
-            return !string.IsNullOrWhiteSpace(StorageConnectionString);
+            return ConfiguredStorages().Any();
         }
     }
 }

@@ -9,7 +9,7 @@ namespace AzureLogsViewer.Model.Entities
         public WadLogEntry()
         {}
 
-        internal WadLogEntry(WadLogEntity entity)
+        internal WadLogEntry(WadLogEntity entity, WadLogsStorageSettings storage)
         {
             PartitionKey = entity.PartitionKey;
             RowKey = entity.RowKey;
@@ -21,6 +21,7 @@ namespace AzureLogsViewer.Model.Entities
             Tid = entity.Tid;
             EventId = entity.EventId;
             EventDateTime = entity.EventDateTime;
+            StorageId = storage.Id;
         }
 
         public long Id { get; set; }
@@ -34,6 +35,7 @@ namespace AzureLogsViewer.Model.Entities
         public int Tid { get; set; }
         public int EventId { get; set; }
         public DateTime EventDateTime { get; set; }
+        public int StorageId { get; set; }
 
         public WadLogEntryKey GetKey()
         {

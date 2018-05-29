@@ -30,7 +30,7 @@ namespace AzureLogsViewer.Tests.ServicesTests
             SetDumpSettings(x =>
             {
                 x.DumpSizeInMinutes = 30;
-                x.LatestDumpTime = null;
+                x.Storages.First().LatestDumpTime = null;
             });
             
             var reader = WadLogsReaderStub.Create()
@@ -56,7 +56,7 @@ namespace AzureLogsViewer.Tests.ServicesTests
             {
                 x.DumpSizeInMinutes = 30;
                 x.DumpOverlapInMinutes = 1;
-                x.LatestDumpTime = Now.AddHours(-0.5);
+                x.Storages.First().LatestDumpTime = Now.AddHours(-0.5);
             });
             
             var reader = WadLogsReaderStub.Create()
@@ -83,7 +83,7 @@ namespace AzureLogsViewer.Tests.ServicesTests
             {
                 x.DumpSizeInMinutes = 30;
                 x.DumpOverlapInMinutes = 30;
-                x.LatestDumpTime = Now.AddHours(-0.5);
+                x.Storages.First().LatestDumpTime = Now.AddHours(-0.5);
 
             });
             
@@ -110,7 +110,7 @@ namespace AzureLogsViewer.Tests.ServicesTests
             {
                 x.DumpSizeInMinutes = 30;
                 x.DumpOverlapInMinutes = 30;
-                x.LatestDumpTime = Now.AddHours(-0.5);
+                x.Storages.First().LatestDumpTime = Now.AddHours(-0.5);
 
             });
 
@@ -140,7 +140,7 @@ namespace AzureLogsViewer.Tests.ServicesTests
             {
                 x.DumpSizeInMinutes = 30;
                 x.DumpOverlapInMinutes = 30;
-                x.LatestDumpTime = Now.AddHours(-1);
+                x.Storages.First().LatestDumpTime = Now.AddHours(-1);
             });
 
             //act
@@ -150,7 +150,7 @@ namespace AzureLogsViewer.Tests.ServicesTests
             ResetDataContext();
             var dumpSettings = DataContext.WadLogsDumpSettings.First();
 
-            Assert.That(dumpSettings.LatestDumpTime, Is.EqualTo(Now.AddMinutes(-30)).Within(1).Seconds);
+            Assert.That(dumpSettings.Storages.First().LatestDumpTime, Is.EqualTo(Now.AddMinutes(-30)).Within(1).Seconds);
         }
 
         [Test]
@@ -161,7 +161,7 @@ namespace AzureLogsViewer.Tests.ServicesTests
             {
                 x.DumpSizeInMinutes = 90;
                 x.DumpOverlapInMinutes = 30;
-                x.LatestDumpTime = Now.AddHours(-1);
+                x.Storages.First().LatestDumpTime = Now.AddHours(-1);
             });
 
             //act
@@ -171,7 +171,7 @@ namespace AzureLogsViewer.Tests.ServicesTests
             ResetDataContext();
             var dumpSettings = DataContext.WadLogsDumpSettings.First();
 
-            Assert.That(dumpSettings.LatestDumpTime, Is.EqualTo(Now).Within(1).Seconds);
+            Assert.That(dumpSettings.Storages.First().LatestDumpTime, Is.EqualTo(Now).Within(1).Seconds);
 
         }
 
@@ -182,8 +182,8 @@ namespace AzureLogsViewer.Tests.ServicesTests
             SetDumpSettings(x =>
             {
                 x.DumpSizeInMinutes = 30;
-                x.LatestDumpTime = Now.AddHours(-0.5);
-                x.StorageConnectionString = null;
+                x.Storages.First().LatestDumpTime = Now.AddHours(-0.5);
+                x.Storages.First().StorageConnectionString = null;
             });
 
             var reader = WadLogsReaderStub.Create().WithEntryOn(Now.AddHours(-0.2));
@@ -241,7 +241,7 @@ namespace AzureLogsViewer.Tests.ServicesTests
             SetDumpSettings(x =>
             {
                 x.DelayBetweenDumpsInMinutes = 30;
-                x.StorageConnectionString = null;
+                x.Storages.First().StorageConnectionString = null;
             });
 
             //act

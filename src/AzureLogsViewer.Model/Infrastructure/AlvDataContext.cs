@@ -17,6 +17,8 @@ namespace AzureLogsViewer.Model.Infrastructure
 
         public DbSet<WadLogsDumpSettings> WadLogsDumpSettings { get; set; }
 
+        public DbSet<WadLogsStorageSettings> WadLogsStorageSettings { get; set; }
+
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Configurations.AddFromAssembly(typeof (AlvDataContext).Assembly);

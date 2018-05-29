@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text.RegularExpressions;
 using AzureLogsViewer.Model.DTO;
@@ -74,9 +76,36 @@ namespace AzureLogsViewer.Model.Services.SlackIntegration
 
             if (messages.Any())
             {
-                DataContext.SlackMessages.AddRange(messages);
-                DataContext.SaveChanges();
+                BulkInsert(messages);
             }
+        }
+
+        private void BulkInsert(List<SlackMessage> messages)
+        {
+            SqlBulkCopy copy = new SqlBulkCopy(DataContext.Database.Connection.ConnectionString);
+            copy.DestinationTableName = "SlackMessages";
+
+            var columns = typeof(SlackMessage).GetProperties().Where(x => x.Name != nameof(SlackMessage.Id)).ToList();
+            var dataTable = new DataTable();
+
+            foreach (var column in columns)
+            {
+                copy.ColumnMappings.Add(column.Name, column.Name);
+                dataTable.Columns.Add(column.Name, column.PropertyType);
+            }
+
+            foreach (var message in messages)
+            {
+                var row = dataTable.NewRow();
+                row[nameof(SlackMessage.Chanel)] = message.Chanel;
+                row[nameof(SlackMessage.Text)] = message.Text;
+                row[nameof(SlackMessage.WebHookUrl)] = message.WebHookUrl;
+
+                dataTable.Rows.Add(row);
+            }
+
+
+            copy.WriteToServer(dataTable);
         }
 
         private SlackMessage CreateMessage(WadLogEntry wadLogEntry, SlackIntegrationInfo integrationInfo)

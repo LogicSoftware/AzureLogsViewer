@@ -73,7 +73,9 @@
     <Compile Include="DTO\WadLogsFilter.cs" />
     <Compile Include="Entities\SlackIntegrationInfo.cs" />
     <Compile Include="Entities\SlackMessage.cs" />
+    <Compile Include="Entities\WadLogsStorageSettings.cs" />
     <Compile Include="Infrastructure\AlvLogger.cs" />
+    <Compile Include="Infrastructure\Configurations\WadLogsStorageSettingsConfiguration.cs" />
     <Compile Include="Migrations\201504122346247_InitialCreate.cs" />
     <Compile Include="Migrations\201504122346247_InitialCreate.Designer.cs">
       <DependentUpon>201504122346247_InitialCreate.cs</DependentUpon>
@@ -81,6 +83,14 @@
     <Compile Include="Migrations\201505032245558_SlackIntegration.cs" />
     <Compile Include="Migrations\201505032245558_SlackIntegration.Designer.cs">
       <DependentUpon>201505032245558_SlackIntegration.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201805290906087_MultipleWadStorages.cs" />
+    <Compile Include="Migrations\201805290906087_MultipleWadStorages.Designer.cs">
+      <DependentUpon>201805290906087_MultipleWadStorages.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201805290943426_AddStorageIdToEntry.cs" />
+    <Compile Include="Migrations\201805290943426_AddStorageIdToEntry.Designer.cs">
+      <DependentUpon>201805290943426_AddStorageIdToEntry.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Migrations\MigrationDatabaseInitializer.cs" />
@@ -117,6 +127,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201505032245558_SlackIntegration.resx">
       <DependentUpon>201505032245558_SlackIntegration.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201805290906087_MultipleWadStorages.resx">
+      <DependentUpon>201805290906087_MultipleWadStorages.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201805290943426_AddStorageIdToEntry.resx">
+      <DependentUpon>201805290943426_AddStorageIdToEntry.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

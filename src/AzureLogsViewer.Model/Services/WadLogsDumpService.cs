@@ -29,20 +29,26 @@ namespace AzureLogsViewer.Model.Services
         public void Dump()
         {
             var settings = GetDumpSettings();
-            if(!settings.IsConfigured())
-                return;
+            foreach (var storageSettings in settings.ConfiguredStorages())
+            {
+                DumpStorage(settings, storageSettings);
+            }
+        }
 
-            var range = GetDumpRange(settings);
+        private void DumpStorage(WadLogsDumpSettings settings, WadLogsStorageSettings storageSettings)
+        {
+            var range = GetDumpRange(settings, storageSettings);
 
-            var logsReader = CreateLogsReader(settings);
+            var logsReader = CreateLogsReader(storageSettings);
             var entries = logsReader.Read(range.From, range.To);
 
-            var existingEntriesKeys = GetExistingEntriesKeys(range);
+            var existingEntriesKeys = GetExistingEntriesKeys(range, storageSettings);
 
             var newEntries = entries.Where(x => !existingEntriesKeys.Contains(x.GetKey()))
                                     .ToList();
 
-            GetDumpSettings().LatestDumpTime = DateTimeHelper.Min(range.To, UtcNow);
+
+            storageSettings.LatestDumpTime = DateTimeHelper.Min(range.To, UtcNow);
 
             BulkInsert(newEntries);
 
@@ -78,6 +84,7 @@ namespace AzureLogsViewer.Model.Services
                 row[nameof(WadLogEntry.RoleInstance)] = entry.RoleInstance;
                 row[nameof(WadLogEntry.RowKey)] = entry.RowKey;
                 row[nameof(WadLogEntry.Tid)] = entry.Tid;
+                row[nameof(WadLogEntry.StorageId)] = entry.StorageId;
 
                 dataTable.Rows.Add(row);
             }
@@ -99,11 +106,12 @@ namespace AzureLogsViewer.Model.Services
             DataContext.Database.ExecuteSqlCommand("DELETE TOP (10000) FROM WadLogEntries WHERE EventDateTime < @p0", date);
         }
 
-        private HashSet<WadLogEntryKey> GetExistingEntriesKeys(DateTimeRange range)
+        private HashSet<WadLogEntryKey> GetExistingEntriesKeys(DateTimeRange range, WadLogsStorageSettings storage)
         {
             var entryKeys =
                 DataContext.WadLogEntries.AsNoTracking()
                            .Where(x => x.EventDateTime >= range.From && x.EventDateTime <= range.To)
+                           .Where(x => x.StorageId == storage.Id)
                            .Select(x => new WadLogEntryKey
                            {
                                PartitionKey = x.PartitionKey,
@@ -113,11 +121,11 @@ namespace AzureLogsViewer.Model.Services
             return new HashSet<WadLogEntryKey>(entryKeys);
         }
 
-        private DateTimeRange GetDumpRange(WadLogsDumpSettings settings)
+        private DateTimeRange GetDumpRange(WadLogsDumpSettings settings, WadLogsStorageSettings storageSettings)
         {
             var range = new DateTimeRange();
 
-            range.From = settings.LatestDumpTime ?? UtcNow.AddHours(-1);
+            range.From = storageSettings.LatestDumpTime ?? UtcNow.AddHours(-1);
             range.To = range.From.AddMinutes(settings.DumpSizeInMinutes);
 
             range.From = range.From.AddMinutes(-settings.DumpOverlapInMinutes);
@@ -141,12 +149,12 @@ namespace AzureLogsViewer.Model.Services
             return TimeSpan.FromMinutes(settings.DelayBetweenDumpsInMinutes);
         }
 
-        private IIWadLogsReader CreateLogsReader(WadLogsDumpSettings settings)
+        private IIWadLogsReader CreateLogsReader(WadLogsStorageSettings settings)
         {
             if(!settings.IsConfigured())
                 throw new ArgumentException("settings should be configured (i.e. has storage connection string)");
 
-            return LogsReaderOverride ?? new WadLogsReader(settings.StorageConnectionString);
+            return LogsReaderOverride ?? new WadLogsReader(settings);
         }
     }
 }
