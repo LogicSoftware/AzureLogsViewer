@@ -107,8 +107,6 @@ namespace AzureLogsViewer.Model.Services
             {
                 newEntries[i].Id = ids[i];
             }
-
-
         }
 
         private void ProcessByIntegrations(List<WadLogEntry> newEntries)
