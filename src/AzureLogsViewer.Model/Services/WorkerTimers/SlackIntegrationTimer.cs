@@ -14,7 +14,7 @@ namespace AzureLogsViewer.Model.Services.WorkerTimers
 
         protected override void Action(IKernel kernel, CancellationToken token)
         {
-            kernel.Get<SlackIntegrationService>().SendMessages();
+            kernel.Get<ISlackIntegrationService>().SendMessages();
         }
     }
 }

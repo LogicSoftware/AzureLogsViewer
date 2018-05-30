@@ -12,7 +12,7 @@ using Ninject;
 
 namespace AzureLogsViewer.Model.Services.SlackIntegration
 {
-    public class SlackIntegrationService
+    public class SlackIntegrationService : ISlackIntegrationService
     {
         private static string _entryUrlFormat;
 

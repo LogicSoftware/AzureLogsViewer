@@ -2,6 +2,8 @@
 using System.Data.Entity;
 using System.Transactions;
 using AzureLogsViewer.Model;
+using AzureLogsViewer.Model.DTO;
+using AzureLogsViewer.Model.Entities;
 using AzureLogsViewer.Model.Infrastructure;
 using AzureLogsViewer.Model.Services;
 using Ninject;
@@ -13,7 +15,7 @@ namespace AzureLogsViewer.Tests
     public abstract class BaseIntegrationTest
     {
         private static Lazy<IKernel> _mainKernel = new Lazy<IKernel>(CreateMainKernel);
-        private IKernel _kernel;
+        protected IKernel _kernel;
 
         private TransactionScope _transactionScope;
 

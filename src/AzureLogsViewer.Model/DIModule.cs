@@ -13,6 +13,7 @@ namespace AzureLogsViewer.Model
             Kernel.Bind<TimerBase>().To<SlackIntegrationTimer>();
 
             Kernel.Bind<ISlackClient>().To<SlackClient>();
+            Kernel.Bind<ISlackIntegrationService>().To<SlackIntegrationService>();
         }
     }
 }

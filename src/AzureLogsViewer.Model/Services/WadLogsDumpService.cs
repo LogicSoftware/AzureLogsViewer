@@ -23,7 +23,7 @@ namespace AzureLogsViewer.Model.Services
         public AlvDataContext DataContext { get; set; }
 
         [Inject]
-        public SlackIntegrationService SlackIntegrationService { get; set; }
+        public ISlackIntegrationService SlackIntegrationService { get; set; }
 
         public DateTime UtcNow { get { return UtcNowTestsOverride ?? DateTime.UtcNow; } }
 
@@ -92,6 +92,23 @@ namespace AzureLogsViewer.Model.Services
 
 
             copy.WriteToServer(dataTable);
+
+            // set ids because they required for slack messages processing
+            // this is the only place for now where new entries might be added and 
+            // this method is not run concurrently, so we can select last N entries ids
+            var ids = DataContext.WadLogEntries.Select(x => x.Id)
+                                 .OrderByDescending(x => x)
+                                 .Take(newEntries.Count)
+                                 .ToList()
+                                 .OrderBy(x => x)
+                                 .ToList();
+
+            for (int i = 0; i < newEntries.Count; i++)
+            {
+                newEntries[i].Id = ids[i];
+            }
+
+
         }
 
         private void ProcessByIntegrations(List<WadLogEntry> newEntries)

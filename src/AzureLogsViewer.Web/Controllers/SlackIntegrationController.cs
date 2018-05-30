@@ -8,7 +8,7 @@ namespace AzureLogsViewer.Web.Controllers
     public class SlackIntegrationController : AlvBaseController
     {
         [Inject]
-        public SlackIntegrationService Service { get; set; }
+        public ISlackIntegrationService Service { get; set; }
 
         public ActionResult Index()
         {

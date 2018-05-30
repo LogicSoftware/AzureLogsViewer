@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using AzureLogsViewer.Model.Entities;
 using AzureLogsViewer.Model.Services;
+using AzureLogsViewer.Model.Services.SlackIntegration;
 using AzureLogsViewer.Model.WadLogs;
 using AzureLogsViewer.Tests.Helpers;
+using Moq;
 using NUnit.Framework;
 
 namespace AzureLogsViewer.Tests.ServicesTests
@@ -12,15 +14,18 @@ namespace AzureLogsViewer.Tests.ServicesTests
     [TestFixture]
     public class WadLogsDumpServiceTests : BaseIntegrationTest
     {
+        private Mock<ISlackIntegrationService> _slackIntegrationMock;
         private DateTime Now { get; set; }
 
         [SetUp]
         public override void SetUp()
         {
             base.SetUp();
-
+            
             Now = DateTime.UtcNow;
             WadLogsDumpService.UtcNowTestsOverride = Now;
+            _slackIntegrationMock = new Mock<ISlackIntegrationService>();
+            _kernel.Rebind<ISlackIntegrationService>().ToConstant(_slackIntegrationMock.Object);
         }
 
         [Test]
@@ -46,6 +51,36 @@ namespace AzureLogsViewer.Tests.ServicesTests
             var expectedEntries = new[] {Now.AddHours(-0.7)};
 
             Assert.That(actualEntries, Is.EquivalentTo(expectedEntries).WithinSeconds(), "should add only entries in range -1hour -> -0.5hour");
+        }
+
+        [Test]
+        public void Dump_should_send_entries_with_ids_to_processing_for_slack_integration()
+        {
+            //arrange
+            var processedEntries = new List<WadLogEntry>();
+            _slackIntegrationMock.Setup(x => x.ProcessLogEntries(It.IsAny<List<WadLogEntry>>()))
+                                 .Callback<List<WadLogEntry>>(entires => processedEntries = entires);
+
+            SetDumpSettings(x =>
+            {
+                x.DumpSizeInMinutes = 60;
+                x.Storages.First().LatestDumpTime = null;
+            });
+
+            var reader = WadLogsReaderStub.Create()
+                                          .WithEntryOn(Now.AddHours(-0.5));
+
+            var existingEntry = WadLogEntryBuilder.New().WithEventDate(Now.AddHours(-5))
+                                          .Create();
+            //act
+            RunDump(reader);
+
+            //assert
+            var expectedEntryIds = DataContext.WadLogEntries.Where(x => x.Id != existingEntry.Id)
+                                              .Select(x => x.Id)
+                                              .ToArray();
+            Assert.AreEqual(1, processedEntries.Count, "one entry should be processed");
+            Assert.That(processedEntries.Select(x => x.Id), Is.EquivalentTo(expectedEntryIds), "entires should be with correct ids");
         }
 
         [Test]
