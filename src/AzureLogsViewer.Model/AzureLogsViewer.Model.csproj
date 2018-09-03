@@ -63,6 +63,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Common\BatchCollection.cs" />
     <Compile Include="Common\DateTimeHelper.cs" />
     <Compile Include="Common\DateTimeRange.cs" />
     <Compile Include="Common\EnumerableExtensions.cs" />

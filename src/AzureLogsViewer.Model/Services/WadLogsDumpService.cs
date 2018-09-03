@@ -60,8 +60,18 @@ namespace AzureLogsViewer.Model.Services
 
         private void BulkInsert(List<WadLogEntry> newEntries)
         {
+            var batches = new BatchCollection<WadLogEntry>(newEntries, 3000);
+            foreach (var batch in batches)
+            {
+                BulkInsertImpl(batch.ToList());
+            }
+        }
+
+        private void BulkInsertImpl(List<WadLogEntry> newEntries)
+        {
             var copy = new SqlBulkCopy(ConfigurationManager.ConnectionStrings["alv"].ConnectionString);
             copy.DestinationTableName = "WadLogEntries";
+            copy.BulkCopyTimeout = 120;
 
             var columns = typeof(WadLogEntry).GetProperties().Where(x => x.Name != nameof(WadLogEntry.Id)).ToList();
             var dataTable = new DataTable();
