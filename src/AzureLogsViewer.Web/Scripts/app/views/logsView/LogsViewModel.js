@@ -53,9 +53,8 @@
             }
 
             var result = {};
-            var regex = /UserId =(\d*), Login =.*\n\s*AccountId=(\d*),/gi;
             _.each(this.logs(), function(log) {
-                var match = regex.exec(log.message);
+                var match = /UserId =(\d*), Login =.*\n?\s*AccountId=(\d*),/gi.exec(log.message);
                 if (match) {
 
                     var userId = match[1];
