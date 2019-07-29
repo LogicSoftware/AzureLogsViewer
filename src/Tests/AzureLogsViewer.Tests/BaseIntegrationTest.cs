@@ -21,7 +21,7 @@ namespace AzureLogsViewer.Tests
 
         public AlvDataContext DataContext { get; private set; }
 
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void FixtureSetup()
         {
             Database.SetInitializer(new TestDatabaseInitializer());

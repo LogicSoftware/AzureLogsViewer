@@ -42,6 +42,8 @@ namespace AzureLogsViewer.Model.Services
 
             var logsReader = CreateLogsReader(storageSettings);
             var entries = logsReader.Read(range.From, range.To);
+            // ignore info logs.
+            entries = entries.Where(x => x.Level < 4).ToList();
 
             var existingEntriesKeys = GetExistingEntriesKeys(range, storageSettings);
 
