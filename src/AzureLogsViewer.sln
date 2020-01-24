@@ -15,9 +15,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzureLogsViewer.Web", "Azur
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzureLogsViewer.Worker", "AzureLogsViewer.Worker\AzureLogsViewer.Worker.csproj", "{990FFBE6-AAF9-49B9-8795-F2F6F648B297}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LogAnalyticsViewer.Model", "LogAnalyticsViewer.Model\LogAnalyticsViewer.Model.csproj", "{0E75DB00-3A32-48B2-B742-1858D4952AD4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LogAnalyticsViewer.Model", "LogAnalyticsViewer.Model\LogAnalyticsViewer.Model.csproj", "{0E75DB00-3A32-48B2-B742-1858D4952AD4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LogAnalyticsViewer.Web", "LogAnalyticsViewer.Web\LogAnalyticsViewer.Web.csproj", "{3D03E4AD-6791-4C72-ACC2-BD9FBF9FEB7A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LogAnalyticsViewer.Web", "LogAnalyticsViewer.Web\LogAnalyticsViewer.Web.csproj", "{3D03E4AD-6791-4C72-ACC2-BD9FBF9FEB7A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
