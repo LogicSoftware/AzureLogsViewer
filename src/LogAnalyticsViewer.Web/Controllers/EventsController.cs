@@ -26,6 +26,7 @@ namespace LogAnalyticsViewer.Web.Controllers
         }
 
         [HttpPost]
+        [Route("/api/search")]
         public Task<IEnumerable<Event>> Get(EventRequest request)
         {
             return _service.GetEvents(request.QueryId, request.From, request.To, request.Filters);
