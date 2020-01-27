@@ -19,10 +19,10 @@ namespace LogAnalyticsViewer.Model.Services.Events
             return this;
         }
 
-        public QueryBuilder AddDateFilter(DateTime from, DateTime to)
+        public QueryBuilder AddDateFilter(DateTime? from, DateTime? to)
         {
-            _timeFilters.Add(new TimeFilter(from.Date, TimeFilterType.GreaterOrEqual));
-            _timeFilters.Add(new TimeFilter(to.Date.AddDays(1), TimeFilterType.Less));
+            _timeFilters.Add(new TimeFilter(from, TimeFilterType.GreaterOrEqual));
+            _timeFilters.Add(new TimeFilter(to, TimeFilterType.LessOrEqual));
           
             return this;
         }

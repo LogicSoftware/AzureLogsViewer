@@ -19,7 +19,7 @@ namespace LogAnalyticsViewer.Model.Services.Events
             _dbContext = dbContext;
         }
         
-        public Task<IEnumerable<Event>> GetEvents(DateTime from, DateTime to, int? queryId = null, List<MessageFilter> filters = null)
+        public Task<IEnumerable<Event>> GetEvents(DateTime? from, DateTime? to, int? queryId = null, List<MessageFilter> filters = null)
         {
             var select = _dbContext.Queries.AsQueryable();
             

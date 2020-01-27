@@ -6,7 +6,7 @@ namespace LogAnalyticsViewer.Model.Enums
 {
     public enum TimeFilterType
     {
-        Less = 1,
+        LessOrEqual = 1,
         GreaterOrEqual = 2,
         Ago = 3
     }

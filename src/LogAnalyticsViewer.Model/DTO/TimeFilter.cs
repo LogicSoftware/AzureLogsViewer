@@ -12,12 +12,12 @@ namespace LogAnalyticsViewer.Model.DTO
         public int? TimeInMinutes { get; set; }
         public TimeFilterType Type { get; set; }
 
-        public TimeFilter(DateTime date, TimeFilterType type) => (Date, Type) = (date, type);
+        public TimeFilter(DateTime? date, TimeFilterType type) => (Date, Type) = (date, type);
         public TimeFilter(int timeInMinutes) => (TimeInMinutes, Type) = (timeInMinutes, TimeFilterType.Ago);
 
         public string FilterStr => Type switch
         {            
-            TimeFilterType.Less => Date != null ? $"TimeGenerated < {Date.Value.ToAzureDate()}" : string.Empty,
+            TimeFilterType.LessOrEqual => Date != null ? $"TimeGenerated <= {Date.Value.ToAzureDate()}" : string.Empty,
             TimeFilterType.GreaterOrEqual => Date != null ? $"TimeGenerated >= {Date.Value.ToAzureDate()}" : string.Empty,
             TimeFilterType.Ago => TimeInMinutes != null ? $"TimeGenerated <= ago({TimeInMinutes}m)" : string.Empty,
 
