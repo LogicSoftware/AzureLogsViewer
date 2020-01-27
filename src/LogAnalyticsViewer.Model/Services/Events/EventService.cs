@@ -1,4 +1,7 @@
 ﻿using LogAnalyticsViewer.Model.DTO;
+using LogAnalyticsViewer.Model.Entities;
+using Microsoft.Azure.OperationalInsights;
+using Microsoft.Rest.Azure.Authentication;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,20 +12,52 @@ namespace LogAnalyticsViewer.Model.Services.Events
 {
     public class EventService
     {
-        private static readonly string[] Summaries = new[]
-        {
-            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-        };
+        private LAVDataContext _dbContext { get; set; }
 
-        public Task<IEnumerable<Event>> GetEvents(int queryId, DateTime from, DateTime to, params Filter[] filters)
+        public EventService(LAVDataContext dbContext)
         {
-            var rng = new Random();
-            return Task.FromResult(Enumerable.Range(1, 5).Select(index => new Event
+            _dbContext = dbContext;
+        }
+        
+        public Task<IEnumerable<Event>> GetEvents(DateTime from, DateTime to, int? queryId = null, List<MessageFilter> filters = null)
+        {
+            var select = _dbContext.Queries.AsQueryable();
+            
+            if (queryId != null)
             {
-                TimeGenerated = DateTime.Now.AddDays(index),
-                Message = Summaries[rng.Next(Summaries.Length)],
-                QueryId = index,
-            }));
+                select = select.Where(q => q.QueryId == queryId);
+            }
+
+            var queries = select
+                .Select(x => x.QueryText)
+                .ToList();
+
+            var queryStr = new QueryBuilder()
+                .AddQueries(queries)
+                .AddDateFilter(from, to)
+                .AddMessageFilter(filters)
+                .Create();
+
+            return GetEvents(queryStr);
+        }
+
+        private async Task<IEnumerable<Event>> GetEvents(string query)
+        {
+            var settings = _dbContext.LogAnalyticsSettings.First();
+
+            var credentials = await ApplicationTokenProvider.LoginSilentAsync(
+                settings.Domain,
+                settings.ClientId,
+                settings.ClientSecret,
+                Consts.AdSettings
+            );
+
+            using var client = new OperationalInsightsDataClient(credentials);
+            client.WorkspaceId = settings.WorkspaceId;
+
+            var rows = (await client.QueryAsync(query)).Tables.First().Rows;
+
+            return rows.Select(r => new Event(r));
         }
     }
 }

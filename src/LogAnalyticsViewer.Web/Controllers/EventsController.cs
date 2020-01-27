@@ -29,7 +29,7 @@ namespace LogAnalyticsViewer.Web.Controllers
         [Route("/api/search")]
         public Task<IEnumerable<Event>> Get(EventRequest request)
         {
-            return _service.GetEvents(request.QueryId, request.From, request.To, request.Filters);
+            return _service.GetEvents(request.From, request.To, /*TODO*/ null, request.MessageFilters);
         }
     }
 }

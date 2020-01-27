@@ -6,9 +6,9 @@ namespace LogAnalyticsViewer.Model.DTO
 {
     public class EventRequest
     {
-        public int QueryId { get; set; }
+        public int? QueryId { get; set; }
         public DateTime From { get; set; }
         public DateTime To { get; set; }
-        public Filter[] Filters { get; set; }
+        public List<MessageFilter> MessageFilters { get; set; }
     }
 }

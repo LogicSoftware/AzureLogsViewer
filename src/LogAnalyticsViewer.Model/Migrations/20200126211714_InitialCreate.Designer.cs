@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LogAnalyticsViewer.Model.Migrations
 {
     [DbContext(typeof(LAVDataContext))]
-    [Migration("20200124120602_InitialCreate")]
+    [Migration("20200126211714_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -58,16 +58,20 @@ namespace LogAnalyticsViewer.Model.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("ClientId")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasColumnType("varchar(50)");
 
                     b.Property<string>("ClientSecret")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasColumnType("varchar(100)");
 
                     b.Property<string>("Domain")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasColumnType("varchar(50)");
 
                     b.Property<string>("WorkspaceId")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasColumnType("varchar(50)");
 
                     b.HasKey("Id");
 
@@ -81,6 +85,10 @@ namespace LogAnalyticsViewer.Model.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("DisplayName")
+                        .IsRequired()
+                        .HasColumnType("varchar(50)");
+
                     b.Property<string>("QueryText")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -88,6 +96,25 @@ namespace LogAnalyticsViewer.Model.Migrations
                     b.HasKey("QueryId");
 
                     b.ToTable("Queries");
+
+                    b.HasData(
+                        new
+                        {
+                            QueryId = 1,
+                            DisplayName = "epcore",
+                            QueryText = @"Event {0}
+| where Source == ""Easy Projects"" 
+| where EventLevel == 2 
+| project TimeGenerated, Message = RenderedDescription, Source = ""epcore"""
+                        },
+                        new
+                        {
+                            QueryId = 2,
+                            DisplayName = "microservices",
+                            QueryText = @"production_services_CL {0} 
+| where LogLevel_s == ""Error"" 
+| project TimeGenerated, Message = strcat(LogMessage_s, LogException_s), Source = LogProperties_Application_s"
+                        });
                 });
 #pragma warning restore 612, 618
         }

@@ -4,9 +4,10 @@ using System.Text;
 
 namespace LogAnalyticsViewer.Model.Enums
 {
-    public enum FilterType
+    public enum TimeFilterType
     {
-        Like = 1,
-        NotLike = 2
+        Less = 1,
+        GreaterOrEqual = 2,
+        Ago = 3
     }
 }

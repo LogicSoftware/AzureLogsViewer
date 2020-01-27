@@ -27,10 +27,10 @@ namespace LogAnalyticsViewer.Model.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    WorkspaceId = table.Column<string>(nullable: true),
-                    ClientId = table.Column<string>(nullable: true),
-                    ClientSecret = table.Column<string>(nullable: true),
-                    Domain = table.Column<string>(nullable: true)
+                    WorkspaceId = table.Column<string>(type: "varchar(50)", nullable: false),
+                    ClientId = table.Column<string>(type: "varchar(50)", nullable: false),
+                    ClientSecret = table.Column<string>(type: "varchar(100)", nullable: false),
+                    Domain = table.Column<string>(type: "varchar(50)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -43,6 +43,7 @@ namespace LogAnalyticsViewer.Model.Migrations
                 {
                     QueryId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    DisplayName = table.Column<string>(type: "varchar(50)", nullable: false),
                     QueryText = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
@@ -54,6 +55,21 @@ namespace LogAnalyticsViewer.Model.Migrations
                 table: "DumpSettings",
                 columns: new[] { "Id", "DelayBetweenDumpsInMinutes", "DumpOverlapInMinutes", "DumpSizeInMinutes" },
                 values: new object[] { 1, 15, 5, 30 });
+
+            migrationBuilder.InsertData(
+                table: "Queries",
+                columns: new[] { "QueryId", "DisplayName", "QueryText" },
+                values: new object[] { 1, "epcore", @"Event {0}
+| where Source == ""Easy Projects"" 
+| where EventLevel == 2 
+| project TimeGenerated, Message = RenderedDescription, Source = ""epcore""" });
+
+            migrationBuilder.InsertData(
+                table: "Queries",
+                columns: new[] { "QueryId", "DisplayName", "QueryText" },
+                values: new object[] { 2, "microservices", @"production_services_CL {0} 
+| where LogLevel_s == ""Error"" 
+| project TimeGenerated, Message = strcat(LogMessage_s, LogException_s), Source = LogProperties_Application_s" });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
