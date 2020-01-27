@@ -1,23 +1,15 @@
-import { act } from "react-dom/test-utils";
+import { useMemo, useReducer } from "react";
+import { MessageFilter, MessageFilterType } from "../types";
 
 let messageIdCounter = 1;
-
-type MessageFilterType = "like" | "notlike";
 
 export type FiltersState = {
     from?: Date;
     to?: Date;
-    queryId?: number;
     messageFilters: {
         [key: string]: MessageFilter;
     }
 }
-
-export type MessageFilter = {
-    id?: number;
-    text: string;
-    type: MessageFilterType;
-};
 
 export const filterActions = {
     update: (data: Partial<Omit<FiltersState, "messageFilters">>) => ({
@@ -28,8 +20,6 @@ export const filterActions = {
     setTo: (to: Date) => filterActions.update({ to }),
     
     setFrom: (from: Date) => filterActions.update({ from }),
-    
-    setQueryId: (queryId: number) => filterActions.update({ queryId }),
     
     addMessageFilter: (type: MessageFilterType) => ({
         type: "AddMessageFilter",
@@ -89,3 +79,17 @@ export const filtersReducer = (state: FiltersState, action: Actions) => {
             return state;
     }
 };
+
+export const useFiltersState = () => {
+    const [state, dispatch] = useReducer(filtersReducer, { messageFilters: {} });
+    const actions = useMemo(() => {
+        const result: any = {};
+        Object.entries(filterActions).forEach(([key, action]: [string, any]) => {
+            result[key] = (...args: any[]) => dispatch(action(...args));
+        });
+        
+        return result as typeof filterActions ;
+    }, []);  
+    
+    return { state, dispatch, actions };
+}
