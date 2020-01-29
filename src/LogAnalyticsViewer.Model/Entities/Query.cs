@@ -8,11 +8,17 @@ namespace LogAnalyticsViewer.Model.Entities
         [Key]
         public int QueryId { get; set; }
         
-        [Column(TypeName = "varchar(50)")]
         [Required]
+        [Column(TypeName = "varchar(50)")]
         public string DisplayName { get; set; }
 
         [Required]
         public string QueryText { get; set; }
+
+        public bool Enabled { get; set; } = true;
+
+        [Required]
+        [Column(TypeName = "varchar(50)")]
+        public string Channel { get; set; }
     }
 }

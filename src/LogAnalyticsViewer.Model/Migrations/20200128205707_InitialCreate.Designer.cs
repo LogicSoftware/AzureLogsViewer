@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LogAnalyticsViewer.Model.Migrations
 {
     [DbContext(typeof(LAVDataContext))]
-    [Migration("20200126211714_InitialCreate")]
+    [Migration("20200128205707_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -85,9 +85,16 @@ namespace LogAnalyticsViewer.Model.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("Channel")
+                        .IsRequired()
+                        .HasColumnType("varchar(50)");
+
                     b.Property<string>("DisplayName")
                         .IsRequired()
                         .HasColumnType("varchar(50)");
+
+                    b.Property<bool>("Enabled")
+                        .HasColumnType("bit");
 
                     b.Property<string>("QueryText")
                         .IsRequired()
@@ -101,7 +108,9 @@ namespace LogAnalyticsViewer.Model.Migrations
                         new
                         {
                             QueryId = 1,
+                            Channel = "#site-errors",
                             DisplayName = "epcore",
+                            Enabled = true,
                             QueryText = @"Event {0}
 | where Source == ""Easy Projects"" 
 | where EventLevel == 2 
@@ -110,7 +119,9 @@ namespace LogAnalyticsViewer.Model.Migrations
                         new
                         {
                             QueryId = 2,
+                            Channel = "#site-errors",
                             DisplayName = "microservices",
+                            Enabled = true,
                             QueryText = @"production_services_CL {0} 
 | where LogLevel_s == ""Error"" 
 | project TimeGenerated, Message = strcat(LogMessage_s, LogException_s), Source = LogProperties_Application_s"
