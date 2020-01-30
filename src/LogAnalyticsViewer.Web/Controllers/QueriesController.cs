@@ -11,7 +11,7 @@ using Microsoft.Extensions.Logging;
 namespace LogAnalyticsViewer.Web.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class QueriesController : ControllerBase
     {
         private readonly ILogger<QueriesController> _logger;
@@ -27,28 +27,28 @@ namespace LogAnalyticsViewer.Web.Controllers
         }
 
         [HttpPost]
-        [Route("/api/list")]
+        [Route("list")]
         public Task<IEnumerable<Query>> GetList()
         {
             return _service.GetQueries();
         }
 
         [HttpPost]
-        [Route("/api/get")]
-        public async Task<Query> GetQuery(int queryId)
+        [Route("get")]
+        public async Task<Query> GetQuery([FromBody]IdModel model)
         {
-            var query = await _service.GetQuery(queryId);
+            var query = await _service.GetQuery(model.QueryId);
             if (query == null)
             {
-                throw new Exception(@$"Query with Id: '{queryId}' not found");
+                throw new Exception(@$"Query with Id: '{model.QueryId}' not found");
             }
 
             return query;
         }
 
         [HttpPost]
-        [Route("/api/create")]
-        public async Task<int> Create(CreateQueryModel model)
+        [Route("create")]
+        public async Task<IdModel> Create([FromBody]CreateQueryModel model)
         {
             if (string.IsNullOrEmpty(model.DisplayName))
             {
@@ -72,12 +72,12 @@ namespace LogAnalyticsViewer.Web.Controllers
             };
 
             var query = await _service.CreateQuery(newQuery);
-            return query.QueryId;
+            return new IdModel { QueryId = query.QueryId };
         }
 
         [HttpPost]
-        [Route("/api/update")]
-        public async Task<ActionResult> Update(SaveQueryModel model)
+        [Route("update")]
+        public async Task<ActionResult> Update([FromBody]SaveQueryModel model)
         {
             var query = await _service.GetQuery(model.QueryId);
             if (query == null)
@@ -109,14 +109,14 @@ namespace LogAnalyticsViewer.Web.Controllers
         }
         
         [HttpPost]
-        [Route("/api/delete")]
-        public async Task<ActionResult> Delete(int queryId)
+        [Route("delete")]
+        public async Task<ActionResult> Delete([FromBody]IdModel model)
         {
-            var query = await _service.GetQuery(queryId);
+            var query = await _service.GetQuery(model.QueryId);
 
             if (query == null)
             {
-                throw new Exception(@$"Query with Id: '{queryId}' not found");
+                throw new Exception(@$"Query with Id: '{model.QueryId}' not found");
             }
 
             await _service.DeleteQuery(query);
