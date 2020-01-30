@@ -1,63 +1,71 @@
 ﻿using LogAnalyticsViewer.Model.DTO;
-using LogAnalyticsViewer.Model.Entities;
 using Microsoft.Azure.OperationalInsights;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Microsoft.Rest.Azure.Authentication;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace LogAnalyticsViewer.Model.Services.Events
 {
     public class EventService
     {
-        private LAVDataContext _dbContext { get; set; }
+        private readonly ILogger<EventService> _logger;
+        private readonly LogAnalyticsSettings _laSettings;
 
-        public EventService(LAVDataContext dbContext)
+        public EventService(ILogger<EventService> logger, IOptionsMonitor<LogAnalyticsSettings> laSettings)
         {
-            _dbContext = dbContext;
+            _logger = logger;
+            _laSettings = laSettings.CurrentValue;
         }
-        
-        public Task<IEnumerable<Event>> GetEvents(DateTime? from, DateTime? to, int? queryId = null, List<MessageFilter> filters = null)
+
+        public async Task<List<Event>> GetEventsForWorker(string query, int timeInMinutes)
         {
-            var select = _dbContext.Queries.AsQueryable();
-            
-            if (queryId != null)
+            try
             {
-                select = select.Where(q => q.QueryId == queryId);
+                var queryStr = new QueryBuilder()
+                .AddQuery(query)
+                .AddTimeFilter(timeInMinutes)
+                .Create();
+            
+                return await GetEvents(queryStr);
             }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Fail get logs for query {query}", ex);
+                return new List<Event>();
+            }
+        }
 
-            var queries = select
-                .Select(x => x.QueryText)
-                .ToList();
-
+        public Task<List<Event>> GetEventsForClient(List<string> queries, DateTime? from, DateTime? to, List<MessageFilter> filters = null)
+        {
             var queryStr = new QueryBuilder()
                 .AddQueries(queries)
                 .AddDateFilter(from, to)
                 .AddMessageFilter(filters)
+                .AddTopFilter(100)
                 .Create();
 
             return GetEvents(queryStr);
         }
 
-        private async Task<IEnumerable<Event>> GetEvents(string query)
+        private async Task<List<Event>> GetEvents(string query)
         {
-            var settings = _dbContext.LogAnalyticsSettings.First();
-
             var credentials = await ApplicationTokenProvider.LoginSilentAsync(
-                settings.Domain,
-                settings.ClientId,
-                settings.ClientSecret,
-                Consts.AdSettings
+                _laSettings.Domain,
+                _laSettings.ClientId,
+                _laSettings.ClientSecret,
+                _laSettings.AdSettings
             );
 
             using var client = new OperationalInsightsDataClient(credentials);
-            client.WorkspaceId = settings.WorkspaceId;
+            client.WorkspaceId = _laSettings.WorkspaceId;
 
             var rows = (await client.QueryAsync(query)).Tables.First().Rows;
 
-            return rows.Select(r => new Event(r));
+            return rows.Select(r => new Event(r)).ToList();
         }
     }
 }

@@ -5,6 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20200128205707_InitialCreate.cs" />
+    <Compile Remove="Migrations\20200128205707_InitialCreate.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.Azure.OperationalInsights" Version="0.10.0-preview" />
     <PackageReference Include="Microsoft.IdentityModel.Clients.ActiveDirectory" Version="4.3.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.1" />

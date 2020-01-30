@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LogAnalyticsViewer.Model.Migrations
 {
     [DbContext(typeof(LAVDataContext))]
-    [Migration("20200128205707_InitialCreate")]
+    [Migration("20200130204042_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -19,64 +19,6 @@ namespace LogAnalyticsViewer.Model.Migrations
                 .HasAnnotation("ProductVersion", "3.1.1")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-            modelBuilder.Entity("LogAnalyticsViewer.Model.Entities.DumpSettings", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("DelayBetweenDumpsInMinutes")
-                        .HasColumnType("int");
-
-                    b.Property<int>("DumpOverlapInMinutes")
-                        .HasColumnType("int");
-
-                    b.Property<int>("DumpSizeInMinutes")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("DumpSettings");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            DelayBetweenDumpsInMinutes = 15,
-                            DumpOverlapInMinutes = 5,
-                            DumpSizeInMinutes = 30
-                        });
-                });
-
-            modelBuilder.Entity("LogAnalyticsViewer.Model.Entities.LogAnalyticsSettings", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("ClientId")
-                        .IsRequired()
-                        .HasColumnType("varchar(50)");
-
-                    b.Property<string>("ClientSecret")
-                        .IsRequired()
-                        .HasColumnType("varchar(100)");
-
-                    b.Property<string>("Domain")
-                        .IsRequired()
-                        .HasColumnType("varchar(50)");
-
-                    b.Property<string>("WorkspaceId")
-                        .IsRequired()
-                        .HasColumnType("varchar(50)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("LogAnalyticsSettings");
-                });
 
             modelBuilder.Entity("LogAnalyticsViewer.Model.Entities.Query", b =>
                 {
