@@ -26,7 +26,7 @@ namespace LogAnalyticsViewer.Model.DTO
         public override bool Equals(object obj) =>
             obj switch
             {
-                Event b => b.Message == Message && b.Source == Source,
+                Event b => b.TimeGenerated == TimeGenerated && b.Message == Message && b.Source == Source,
                 _ => false
             };
     }

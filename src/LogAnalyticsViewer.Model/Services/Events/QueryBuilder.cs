@@ -57,7 +57,7 @@ namespace LogAnalyticsViewer.Model.Services.Events
             var timeFilter = JoinFilters(_timeFilters.Select(f => f?.FilterStr));
 
             var query = string.Join(@"
-| union ", _queries.Select(q => string.Format($"({q}{_topFilter})", timeFilter)));
+| union ", _queries.Select(q => $"({q.Replace("{TimeFilter}", timeFilter)}{_topFilter})"));
 
             var messagesFilter = JoinFilters(_messageFilters.Select(f => f?.FilterStr));
             var queryWithMessageFilters = $"{query}{messagesFilter}";

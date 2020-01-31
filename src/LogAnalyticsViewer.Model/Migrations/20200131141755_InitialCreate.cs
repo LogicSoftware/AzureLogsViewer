@@ -25,7 +25,7 @@ namespace LogAnalyticsViewer.Model.Migrations
             migrationBuilder.InsertData(
                 table: "Queries",
                 columns: new[] { "QueryId", "Channel", "DisplayName", "Enabled", "QueryText" },
-                values: new object[] { 1, "#site-errors", "epcore", true, @"Event {0}
+                values: new object[] { 1, "#site-errors", "epcore", true, @"Event {TimeFilter}
 | where Source == ""Easy Projects"" 
 | where EventLevel == 2 
 | project TimeGenerated, Message = RenderedDescription, Source = ""epcore""" });
@@ -33,7 +33,7 @@ namespace LogAnalyticsViewer.Model.Migrations
             migrationBuilder.InsertData(
                 table: "Queries",
                 columns: new[] { "QueryId", "Channel", "DisplayName", "Enabled", "QueryText" },
-                values: new object[] { 2, "#site-errors", "microservices", true, @"production_services_CL {0} 
+                values: new object[] { 2, "#site-errors", "microservices", true, @"production_services_CL {TimeFilter}
 | where LogLevel_s == ""Error"" 
 | project TimeGenerated, Message = strcat(LogMessage_s, LogException_s), Source = LogProperties_Application_s" });
         }

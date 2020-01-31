@@ -22,7 +22,7 @@ namespace LogAnalyticsViewer.Worker
                 {
                     services.Configure<LogViewerSettings>(hostContext.Configuration.GetSection("LogViewer"));
                     services.Configure<SlackIntegrationSettings>(hostContext.Configuration.GetSection("SlackIntegration"));
-                    services.Configure<LogAnalyticsSettings>(hostContext.Configuration.GetSection("LogViewer"));
+                    services.Configure<LogAnalyticsSettings>(hostContext.Configuration.GetSection("LogAnalytics"));
 
                     services.AddDbContext<LAVDataContext>(options =>
                         options.UseSqlServer(hostContext.Configuration.GetConnectionString("ConnectionString")));
