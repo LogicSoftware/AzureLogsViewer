@@ -44,7 +44,7 @@ namespace LogAnalyticsViewer.Worker
                     var newBatch = await eventService.GetEventsForWorker(query.QueryText, _settings.DumpSizeInMinutes);
                     var newEvents = newBatch.Except(prevBatch ?? new List<Event>()).ToList();
 
-                    slackService.ProcessEvents(newEvents, query.Channel);
+                    slackService.ProcessEvents(newEvents, query.Channel, query.QueryId);
 
                     _events[query.QueryId] = newBatch;
                 }

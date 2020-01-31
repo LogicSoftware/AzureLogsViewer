@@ -21,24 +21,24 @@ namespace LogAnalyticsViewer.Worker.SlackIntegration
             (_logger, _settings, _client) =
             (logger, settings.CurrentValue, client);
 
-        public void ProcessEvents(List<Event> newEvents, string forChannel)
+        public void ProcessEvents(List<Event> newEvents, string forChannel, int queryId)
         {
             var processor = new SimilarityProcessor();
             var unique = processor.GetUniqueWithTotal(newEvents);
                 
             var result = unique
                 .Take(_settings.RatePerQuery)
-                .Select(e => CreateMessage(e))
+                .Select(e => CreateMessage(e, queryId))
                 .ToList();
 
             result.ForEach(message => PostMessage(message, forChannel));
         }       
 
-        private string CreateMessage(EventForSlack e)
+        private string CreateMessage(EventForSlack e, int queryId)
         {
             var link = _settings.EventUrlFormat
-                .Replace("{TimeGenerated}", e.TimeGenerated.ToString("s", CultureInfo.InvariantCulture))
-                .Replace("{Source}", e.Source);
+                .Replace("{TimeGenerated}", e.TimeGenerated.AddSeconds(1).ToString("s", CultureInfo.InvariantCulture))
+                .Replace("{QueryId}", queryId.ToString());
                 
             var text = _settings.MessagePattern
                 .Replace("{Date}", e.TimeGenerated.ToString("G"))
