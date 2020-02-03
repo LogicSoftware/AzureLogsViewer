@@ -1,0 +1,15 @@
+.event_message {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+ }
+
+.events_table {
+    width: 100%;
+    border: 1px solid rgba(16, 22, 26, 0.15);
+}
+
+.spinner_wrapper {
+    position: fixed;
+    left: calc(50% - 100px);
+    top: calc(50% - 100px);
+}
