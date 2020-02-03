@@ -19,7 +19,7 @@ namespace LogAnalyticsViewer.Model.DTO
         {            
             TimeFilterType.LessOrEqual => Date != null ? $"TimeGenerated <= {Date.Value.ToAzureDate()}" : string.Empty,
             TimeFilterType.GreaterOrEqual => Date != null ? $"TimeGenerated >= {Date.Value.ToAzureDate()}" : string.Empty,
-            TimeFilterType.Ago => TimeInMinutes != null ? $"TimeGenerated <= ago({TimeInMinutes}m)" : string.Empty,
+            TimeFilterType.Ago => TimeInMinutes != null ? $"TimeGenerated >= ago({TimeInMinutes}m)" : string.Empty,
 
             _ => throw new InvalidOperationException($"Invalid time filter: {this}")
         };

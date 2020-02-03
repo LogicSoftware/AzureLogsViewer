@@ -19,6 +19,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LogAnalyticsViewer.Model", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LogAnalyticsViewer.Web", "LogAnalyticsViewer.Web\LogAnalyticsViewer.Web.csproj", "{3D03E4AD-6791-4C72-ACC2-BD9FBF9FEB7A}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LogAnalyticsViewer.Worker", "LogAnalyticsViewer.Worker\LogAnalyticsViewer.Worker.csproj", "{4F0DAC40-F26B-4BFF-B3F9-414727968C9E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -53,6 +55,10 @@ Global
 		{3D03E4AD-6791-4C72-ACC2-BD9FBF9FEB7A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3D03E4AD-6791-4C72-ACC2-BD9FBF9FEB7A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3D03E4AD-6791-4C72-ACC2-BD9FBF9FEB7A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4F0DAC40-F26B-4BFF-B3F9-414727968C9E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4F0DAC40-F26B-4BFF-B3F9-414727968C9E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4F0DAC40-F26B-4BFF-B3F9-414727968C9E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4F0DAC40-F26B-4BFF-B3F9-414727968C9E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
