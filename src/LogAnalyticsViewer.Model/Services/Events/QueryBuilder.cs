@@ -1,17 +1,23 @@
 ﻿using LogAnalyticsViewer.Model.DTO;
 using LogAnalyticsViewer.Model.Enums;
-using LogAnalyticsViewer.Model.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace LogAnalyticsViewer.Model.Services.Events
 {
-    public class QueryBuilder
+    internal class QueryBuilder
     {
         private List<string> _queries = new List<string>();    
         private List<TimeFilter> _timeFilters = new List<TimeFilter>();
         private List<MessageFilter> _messageFilters = new List<MessageFilter>();
+        private string _topFilter = string.Empty;
+
+        public QueryBuilder AddQuery(string query)
+        {
+            _queries.Add(query);
+            return this;
+        }
 
         public QueryBuilder AddQueries(List<string> queries)
         {
@@ -39,17 +45,22 @@ namespace LogAnalyticsViewer.Model.Services.Events
             return this;
         }
 
+        public QueryBuilder AddTopFilter(int top)
+        {
+            _topFilter = $@"
+| take {top}";
+            return this;
+        }
+
         public string Create()
         {          
             var timeFilter = JoinFilters(_timeFilters.Select(f => f?.FilterStr));
 
             var query = string.Join(@"
-| union ", _queries.Select(q => string.Format($@"({q} 
-| take 10)" // temporary, TODO
-, timeFilter)));
+| union ", _queries.Select(q => $"({q.Replace("{TimeFilter}", timeFilter)}{_topFilter})"));
 
             var messagesFilter = JoinFilters(_messageFilters.Select(f => f?.FilterStr));
-            var queryWithMessageFilters = @$"{query}{messagesFilter}";
+            var queryWithMessageFilters = $"{query}{messagesFilter}";
 
             return queryWithMessageFilters;
         }

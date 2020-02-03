@@ -33,6 +33,7 @@ namespace LogAnalyticsViewer.Web
                 configuration.RootPath = "ClientApp/build";
             });
 
+            services.Configure<LogAnalyticsSettings>(Configuration.GetSection("LogAnalytics"));
             services.AddTransient(typeof(EventService));
             services.AddTransient(typeof(QueryService));
 
@@ -54,7 +55,6 @@ namespace LogAnalyticsViewer.Web
                 app.UseHsts();
             }
 
-            app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
 
