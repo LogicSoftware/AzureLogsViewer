@@ -1,5 +1,5 @@
 import { Button, NumericInput } from "@blueprintjs/core";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useFiltersState } from "../../state/filtersReducer";
 import { SearchFilters, UrlSearchFiltersParams } from "../../types";
 import { AddMessageFilter } from "./AddMessageFilter";
@@ -9,12 +9,14 @@ import { MessageEditor } from "./MessageEditor";
 import moment from "moment";
 import { getURLParametersFromSearch } from "../../../helpers/getURLParametersFromSearch";
 import { useLocation } from "react-router-dom";
+import { QueryIdFilter } from "./QueryIdFilter";
 
 type Props = {
     onChange: (filter: SearchFilters) => any;
 };
 
 export const Filters: React.FC<Props> = ({ onChange }) => {
+    const [applyFromQuery, setApplyFromQuery] = useState(false);
     const { state, actions } = useFiltersState();
     const messages = React.useMemo(() => Object.values(state.messageFilters), [state.messageFilters]);
     const onApply = () => {
@@ -22,11 +24,8 @@ export const Filters: React.FC<Props> = ({ onChange }) => {
                                      .map(x => ({...x, text: x.text.trim()}))
                                      .filter(x =>  x.text);
         
-
-        const {ignoreForceApply, ignoreLocation, ...other} = state;
-
         const filters: SearchFilters = {
-            ...other,
+            ...state,
             from: state.from && moment(state.from).utc(true).toDate(),
             to: state.to &&  moment(state.to).utc(true).toDate(),
             messageFilters,
@@ -34,30 +33,25 @@ export const Filters: React.FC<Props> = ({ onChange }) => {
         
         onChange(filters);
     };
-    
-    const onChangeQueryId = (value: number) => {
-        if (!value){
-            actions.setQueryId(undefined);
-            return;
-        }
-
-        actions.setQueryId(value);
-    }
 
     const location = useLocation();
-    const params = getURLParametersFromSearch(location.search) as UrlSearchFiltersParams;
+    useEffect(() => {
+        const params = getURLParametersFromSearch(location.search) as UrlSearchFiltersParams;
 
-    if (params && !state.ignoreLocation) {
-        actions.setFrom(params.from && moment(params.from).toDate());
-        actions.setTo(params.to && moment(params.to).toDate());
-        actions.setQueryId(params.queryId && Number(params.queryId));
-        actions.setIgnoreLocation(true);
-    }
+        if (params) {
+            actions.setFrom(params.from && moment(params.from).toDate());
+            actions.setTo(params.to && moment(params.to).toDate());
+            actions.setQueryId(params.queryId && Number(params.queryId));
+            // postpone onApply to get actual state in onApply callback
+            setApplyFromQuery(true);
+        }
+    }, []);
 
-    if (state.ignoreLocation && !state.ignoreForceApply) {
-        onApply();
-        actions.setIgnoreForceApply(true);
-    }
+    useEffect(() => {
+        if(applyFromQuery) {
+            onApply();
+        }
+    }, [applyFromQuery]);
 
     return (
         <div>
@@ -68,10 +62,8 @@ export const Filters: React.FC<Props> = ({ onChange }) => {
                 <span>To </span>
                 <DateFilterInput value={state.to} onChange={actions.setTo} />
                 <span className={styles.indent} />
-                <span>QueryId </span>
-                <div className={styles.numeric_field}>
-                    <NumericInput className={"pt-fill"} value={state.queryId} onValueChange={onChangeQueryId} />
-                </div>
+                <span>Query </span>
+                <QueryIdFilter value={state.queryId} onChange={actions.setQueryId} />
             </div>
             {messages.map(m => (
                 <div className={styles.row} key={m.id}>
