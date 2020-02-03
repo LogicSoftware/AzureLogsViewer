@@ -6,6 +6,9 @@ let messageIdCounter = 1;
 export type FiltersState = {
     from?: Date;
     to?: Date;
+    queryId?: number;
+    ignoreLocation?: boolean;
+    ignoreForceApply?: boolean;
     messageFilters: {
         [key: string]: MessageFilter;
     }
@@ -19,6 +22,12 @@ export const filterActions = {
     
     setTo: (to: Date) => filterActions.update({ to }),
     
+    setQueryId: (queryId: number) => filterActions.update({ queryId }),
+
+    setIgnoreLocation: (ignoreLocation: boolean) => filterActions.update({ ignoreLocation }),
+
+    setIgnoreForceApply: (ignoreForceApply: boolean) => filterActions.update({ ignoreForceApply }),
+
     setFrom: (from: Date) => filterActions.update({ from }),
     
     addMessageFilter: (type: MessageFilterType) => ({
