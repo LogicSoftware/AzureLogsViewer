@@ -39,6 +39,7 @@ const QueriesTableInner: React.FC<Props> = ({ queries, create }) => {
             <table className={tableClassNames}>
                 <thead>
                     <tr>
+                        <th>QueryId</th>
                         <th>Display name</th>
                         <th>Chanel</th>
                         <th>Enabled</th>
@@ -48,6 +49,7 @@ const QueriesTableInner: React.FC<Props> = ({ queries, create }) => {
                 <tbody>
                     {queries && queries.map((query, index) => (
                         <tr key={index}>
+                             <td>{query.queryId}</td>
                             <td>{query.displayName}</td>
                             <td>{query.channel}</td>
                             <td>{query.enabled ? 'Enabled' : 'Dissabled'}</td>
