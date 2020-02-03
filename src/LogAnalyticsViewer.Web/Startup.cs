@@ -35,6 +35,7 @@ namespace LogAnalyticsViewer.Web
 
             services.Configure<LogAnalyticsSettings>(Configuration.GetSection("LogAnalytics"));
             services.AddTransient(typeof(EventService));
+            services.AddTransient(typeof(QueryService));
 
             services.AddDbContext<LAVDataContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("ConnectionString")));

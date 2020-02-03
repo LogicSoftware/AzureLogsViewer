@@ -6,6 +6,7 @@ let messageIdCounter = 1;
 export type FiltersState = {
     from?: Date;
     to?: Date;
+    queryId?: number;
     messageFilters: {
         [key: string]: MessageFilter;
     }
@@ -19,6 +20,8 @@ export const filterActions = {
     
     setTo: (to: Date) => filterActions.update({ to }),
     
+    setQueryId: (queryId: number) => filterActions.update({ queryId }),
+
     setFrom: (from: Date) => filterActions.update({ from }),
     
     addMessageFilter: (type: MessageFilterType) => ({

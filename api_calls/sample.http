@@ -1,0 +1,44 @@
+
+@host = https://localhost:44309
+
+### get all queries
+POST {{host}}/api/queries/list
+Content-Type: application/json
+
+
+### get query details by Id
+POST {{host}}/api/queries/get
+Content-Type: application/json
+
+{"queryId": 6}
+
+
+### create new query
+POST {{host}}/api/queries/create
+Content-Type: application/json
+
+{ 
+    "displayName": "Query" , 
+    "queryText" :"query text",
+    "channel": "Channel",
+    "enabled": true
+}
+
+### save query
+POST {{host}}/api/queries/update
+Content-Type: application/json
+
+{
+    "queryId": 6 ,
+    "displayName": "Query updated" , 
+    "queryText" :"query text",
+    "channel": "Channel 1",
+    "enabled": false
+ }
+
+### delete query
+POST {{host}}/api/queries/delete
+Content-Type: application/json
+
+{ "queryId": 6 }
+

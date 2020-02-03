@@ -9,5 +9,12 @@ export type MessageFilter = {
 export type SearchFilters = {
     from?: Date;
     to?: Date;
+    queryId?: number;
     messageFilters: MessageFilter[];
 }
+
+export type UrlSearchFiltersParams = {
+    from: string;
+    to: string;
+    queryId: number;
+}   

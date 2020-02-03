@@ -1,18 +1,22 @@
-import { Button } from "@blueprintjs/core";
-import React from "react";
+import { Button, NumericInput } from "@blueprintjs/core";
+import React, { useEffect, useState } from "react";
 import { useFiltersState } from "../../state/filtersReducer";
-import { SearchFilters } from "../../types";
+import { SearchFilters, UrlSearchFiltersParams } from "../../types";
 import { AddMessageFilter } from "./AddMessageFilter";
 import { DateFilterInput } from "./DateFilterInput";
 import styles from "./Filters.module.css";
 import { MessageEditor } from "./MessageEditor";
 import moment from "moment";
+import { getURLParametersFromSearch } from "../../../helpers/getURLParametersFromSearch";
+import { useLocation } from "react-router-dom";
+import { QueryIdFilter } from "./QueryIdFilter";
 
 type Props = {
     onChange: (filter: SearchFilters) => any;
 };
 
 export const Filters: React.FC<Props> = ({ onChange }) => {
+    const [applyFromQuery, setApplyFromQuery] = useState(false);
     const { state, actions } = useFiltersState();
     const messages = React.useMemo(() => Object.values(state.messageFilters), [state.messageFilters]);
     const onApply = () => {
@@ -29,8 +33,26 @@ export const Filters: React.FC<Props> = ({ onChange }) => {
         
         onChange(filters);
     };
-    
-    // TODO : init from query string
+
+    const location = useLocation();
+    useEffect(() => {
+        const params = getURLParametersFromSearch(location.search) as UrlSearchFiltersParams;
+
+        if (params) {
+            actions.setFrom(params.from && moment(params.from).toDate());
+            actions.setTo(params.to && moment(params.to).toDate());
+            actions.setQueryId(params.queryId && Number(params.queryId));
+            // postpone onApply to get actual state in onApply callback
+            setApplyFromQuery(true);
+        }
+    }, []);
+
+    useEffect(() => {
+        if(applyFromQuery) {
+            onApply();
+        }
+    }, [applyFromQuery]);
+
     return (
         <div>
             <div className={styles.row}>
@@ -39,6 +61,9 @@ export const Filters: React.FC<Props> = ({ onChange }) => {
                 <span className={styles.indent} />
                 <span>To </span>
                 <DateFilterInput value={state.to} onChange={actions.setTo} />
+                <span className={styles.indent} />
+                <span>Query </span>
+                <QueryIdFilter value={state.queryId} onChange={actions.setQueryId} />
             </div>
             {messages.map(m => (
                 <div className={styles.row} key={m.id}>
