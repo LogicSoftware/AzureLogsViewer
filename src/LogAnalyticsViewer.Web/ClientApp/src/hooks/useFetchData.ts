@@ -31,7 +31,7 @@ export const useFetchData = <T>(params: Params, deps: DependencyList) => {
                 setResult(resp.data);
             }
             catch(e) {
-                if(!axios.isCancel(source.token)) {
+                if(!axios.isCancel(e)) {
                     setIsError(true);
                 }       
             } finally {
