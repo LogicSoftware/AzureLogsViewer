@@ -14,7 +14,7 @@ namespace LogAnalyticsViewer.Model.Extensions
 
         public static string ToCommonFormat(this DateTime date)
         {
-            return date.ToString("yyyy-MM-dd HH:mm:ss.fff", CultureInfo.InvariantCulture);
+            return date.ToString("yyyy-MM-ddTHH:mm:ss.fff", CultureInfo.InvariantCulture);
         }
     }
 }
