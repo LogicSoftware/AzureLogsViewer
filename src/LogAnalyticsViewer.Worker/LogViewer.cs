@@ -18,6 +18,7 @@ namespace LogAnalyticsViewer.Worker
     {
         private readonly IServiceScopeFactory _scopeFactory;
         private readonly LogViewerSettings _settings;
+        private readonly int _delayInMilliseconds;
         private readonly ILogger<LogViewer> _logger;
                 
         private Dictionary</*QueryId*/int, List<Event>> _events = new Dictionary<int, List<Event>>();
@@ -27,8 +28,8 @@ namespace LogAnalyticsViewer.Worker
             IServiceScopeFactory scopeFactory,
             ILogger<LogViewer> logger
         ) => 
-            (_scopeFactory, _settings, _logger) =
-            (scopeFactory, settings.CurrentValue, logger);
+            (_scopeFactory, _settings, _logger, _delayInMilliseconds) =
+            (scopeFactory, settings.CurrentValue, logger, settings.CurrentValue.DelayBetweenDumpsInMinutes * 60 * 1000);
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
@@ -43,7 +44,7 @@ namespace LogAnalyticsViewer.Worker
                     _logger.LogError(ex, "Errors notification fails");
                 }
 
-                await Task.Delay(_settings.DelayBetweenDumpsInMinutes, stoppingToken);
+                await Task.Delay(_delayInMilliseconds, stoppingToken);
             }
         }
 
