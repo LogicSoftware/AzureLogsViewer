@@ -56,7 +56,7 @@ namespace LogAnalyticsViewer.Worker.SlackIntegration
         {
             try
             {
-                _client.PostMessage(_settings.WebHookUrl, message, channel);
+                _client.PostMessage(_settings.ApiToken, message, channel);
             }
             catch (Exception ex)
             {
