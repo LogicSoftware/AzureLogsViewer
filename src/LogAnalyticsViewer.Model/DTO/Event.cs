@@ -12,7 +12,7 @@ namespace LogAnalyticsViewer.Model.DTO
 
         public Event(IList<string> values)
         {
-            TimeGenerated = DateTimeOffset.Parse(values[0], CultureInfo.InvariantCulture).UtcDateTime;
+            TimeGenerated = DateTime.Parse(values[0], CultureInfo.InvariantCulture);
             Message = values[1];
             Source = values[2];
         }

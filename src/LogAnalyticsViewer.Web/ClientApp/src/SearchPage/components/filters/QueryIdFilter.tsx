@@ -23,7 +23,7 @@ export const QueryIdFilter: React.FC<Props> = ({ value, onChange }) => {
         <HTMLSelect value={value} onChange={onSelectChange}>
             <option>None</option> 
             {result && result.map(i => (
-                <option value={i.queryId}>{i.displayName}</option>
+                <option key={i.queryId} value={i.queryId}>{i.displayName}</option>
             ))}
         </HTMLSelect>
     );

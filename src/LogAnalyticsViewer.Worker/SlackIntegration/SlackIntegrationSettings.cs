@@ -3,7 +3,7 @@
     public class SlackIntegrationSettings
     {        
         public string EventUrlFormat { get; set; }
-        public string WebHookUrl { get; set; }
+        public string ApiToken { get; set; }
 
         public int RatePerQuery { get; set; } = 100;
         public int MessageLength { get; set; } = 350;

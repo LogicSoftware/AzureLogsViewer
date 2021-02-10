@@ -1,12 +1,5 @@
-﻿/*
- * Get this code here https://gist.github.com/jogleasonjr/7121367
- */
-
-using System;
-using System.Collections.Specialized;
-using System.Net;
-using System.Text;
-using Newtonsoft.Json;
+﻿using System;
+using RestSharp;
 
 namespace LogAnalyticsViewer.Worker.SlackIntegration
 {
@@ -14,10 +7,9 @@ namespace LogAnalyticsViewer.Worker.SlackIntegration
     //Note: This class uses the Newtonsoft Json.NET serializer available via NuGet
     public class SlackClient
     {
-        private readonly Encoding _encoding = new UTF8Encoding();
+        private RestClient _apiClient = new RestClient("https://slack.com/api/");
 
-        //Post a message using simple strings
-        public void PostMessage(string urlWithAccessToken, string text, string channel)
+        public void PostMessage(string token, string text, string channel)
         {
             Payload payload = new Payload()
             {
@@ -26,24 +18,49 @@ namespace LogAnalyticsViewer.Worker.SlackIntegration
                 Text = text
             };
 
-            PostMessage(urlWithAccessToken, payload);
+            PostMessage(token, payload);
         }
 
-        //Post a message using a Payload object
-        private void PostMessage(string urlWithAccessToken, Payload payload)
+        private void PostMessage(string token, Payload payload)
         {
-            string payloadJson = JsonConvert.SerializeObject(payload);
-
-            using (WebClient client = new WebClient())
+            var data = new
             {
-                NameValueCollection data = new NameValueCollection();
-                data["payload"] = payloadJson;
+                username = "azure-logs",
+                channel = payload.Channel,
+                text = payload.Text,
+                link_names = true,
+            };
+            var request = new RestRequest("chat.postMessage");
+            request.AddParameter("token", token);
+            request.AddObject(data);
+            var response = _apiClient.Post<ApiRespBase>(request);
+            CheckResponse(response);
+        }
 
-                var response = client.UploadValues(new Uri(urlWithAccessToken), "POST", data);
-
-                //The response text is usually "ok"
-                string responseText = _encoding.GetString(response);
+        private void CheckResponse<T>(IRestResponse<T> response)
+            where T : ApiRespBase
+        {
+            if (response.StatusCode != System.Net.HttpStatusCode.OK || response.ErrorException != null)
+            {
+                var message = "Error during posting message to slack. " + Environment.NewLine +
+                    "StatusCode: " + response.StatusCode + Environment.NewLine +
+                    "ErrorException: " + response.ErrorException != null ? response.ErrorException.ToString() : " - ";
+                throw new Exception(message);
             }
+
+            var respData = response.Data;
+            if (!respData.ok)
+            {
+                throw new Exception($"slack responded with failed response: {respData.error}");
+            }
+        }
+
+
+        public class ApiRespBase
+        {
+            public bool ok { get; set; }
+
+            public string error { get; set; }
         }
     }
 }

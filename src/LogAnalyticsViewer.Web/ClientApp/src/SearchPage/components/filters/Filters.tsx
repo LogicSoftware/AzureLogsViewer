@@ -36,12 +36,19 @@ export const Filters: React.FC<Props> = ({ onChange }) => {
 
     const location = useLocation();
     useEffect(() => {
-        const params = getURLParametersFromSearch(location.search) as UrlSearchFiltersParams;
+        let params = getURLParametersFromSearch(location.search) || {} as UrlSearchFiltersParams;
+        let { from, to, queryId } = params;
 
-        if (params) {
-            actions.setFrom(params.from && moment(params.from).toDate());
-            actions.setTo(params.to && moment(params.to).toDate());
-            actions.setQueryId(params.queryId && Number(params.queryId));
+        if (from || to || queryId) {
+            if (from) {
+                actions.setFrom(params.from && moment(params.from).toDate());
+            }
+            if (to) {
+                actions.setTo(params.to && moment(params.to).toDate());
+            }
+            if (queryId) {
+                actions.setQueryId(params.queryId && Number(params.queryId));
+            }
             // postpone onApply to get actual state in onApply callback
             setApplyFromQuery(true);
         }

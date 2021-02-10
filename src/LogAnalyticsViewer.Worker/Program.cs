@@ -12,7 +12,9 @@ namespace LogAnalyticsViewer.Worker
     {
         public static void Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
+            var host = CreateHostBuilder(args).Build();
+            UpdateDatabase(host);
+            host.Run();
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
@@ -33,5 +35,20 @@ namespace LogAnalyticsViewer.Worker
                     
                     services.AddHostedService<LogViewer>();
                 });
+
+
+
+        private static void UpdateDatabase(IHost app)
+        {
+            using (var serviceScope = app.Services
+                .GetRequiredService<IServiceScopeFactory>()
+                .CreateScope())
+            {
+                using (var context = serviceScope.ServiceProvider.GetService<LAVDataContext>())
+                {
+                    context.Database.Migrate();
+                }
+            }
+        }
     }
 }

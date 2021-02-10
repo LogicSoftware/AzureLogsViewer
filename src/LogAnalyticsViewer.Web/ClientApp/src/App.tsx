@@ -16,7 +16,7 @@ const linkProps: Partial<React.ComponentProps<typeof NavLink>> = {
 
 const App: React.FC = () => {
     return (
-        <BrowserRouter>
+        <BrowserRouter basename={process.env.PUBLIC_URL}>
             <div className={styles.app}>
                 <div className={styles.app_header}>
                     <div className={styles.app_title}>Logs Viewer1</div>

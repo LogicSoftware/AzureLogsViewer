@@ -1,4 +1,5 @@
 ﻿using LogAnalyticsViewer.Model.DTO;
+using LogAnalyticsViewer.Model.Extensions;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;
@@ -37,7 +38,8 @@ namespace LogAnalyticsViewer.Worker.SlackIntegration
         private string CreateMessage(EventForSlack e, int queryId)
         {
             var link = _settings.EventUrlFormat
-                .Replace("{TimeGenerated}", e.TimeGenerated.AddSeconds(1).ToString("s", CultureInfo.InvariantCulture))
+                .Replace("{From}", e.TimeGenerated.ToCommonFormat())
+                .Replace("{To}", e.TimeGenerated.ToCommonFormat())
                 .Replace("{QueryId}", queryId.ToString());
                 
             var text = _settings.MessagePattern
@@ -54,7 +56,7 @@ namespace LogAnalyticsViewer.Worker.SlackIntegration
         {
             try
             {
-                _client.PostMessage(_settings.WebHookUrl, message, channel);
+                _client.PostMessage(_settings.ApiToken, message, channel);
             }
             catch (Exception ex)
             {
