@@ -57,10 +57,10 @@ namespace LogAnalyticsViewer.Model.Services.Events
             var timeFilter = JoinFilters(_timeFilters.Select(f => f?.FilterStr));
 
             var query = string.Join(@"
-| union ", _queries.Select(q => $"({q.Replace("{TimeFilter}", timeFilter)}{_topFilter})"));
+| union ", _queries.Select(q => $"({q.Replace("{TimeFilter}", timeFilter)})"));
 
             var messagesFilter = JoinFilters(_messageFilters.Select(f => f?.FilterStr));
-            var queryWithMessageFilters = $"{query}{messagesFilter}";
+            var queryWithMessageFilters = $"{query}{messagesFilter}{_topFilter}";
 
             return queryWithMessageFilters;
         }
