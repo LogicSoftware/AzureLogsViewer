@@ -9,16 +9,21 @@ using LogAnalyticsViewer.Model.Entities;
 
 namespace LogAnalyticsViewer.Worker.SlackIntegration
 {
-    public class SlackIntegrationService
+    public interface ISlackIntegrationService
     {
-        private readonly SlackClient _client;
+        Task ProcessEvents(List<Event> newEvents, string forChannel, int queryId);
+    }
+
+    public class SlackIntegrationService : ISlackIntegrationService
+    {
+        private readonly ISlackClient _client;
         private readonly ILogger<SlackIntegrationService> _logger;
         private readonly SlackIntegrationSettings _settings;
 
         public SlackIntegrationService(
             ILogger<SlackIntegrationService> logger,
             IOptionsMonitor<SlackIntegrationSettings> settings,
-            SlackClient client) =>
+            ISlackClient client) =>
             (_logger, _settings, _client) =
             (logger, settings.CurrentValue, client);
 

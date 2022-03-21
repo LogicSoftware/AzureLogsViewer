@@ -29,9 +29,9 @@ namespace LogAnalyticsViewer.Worker
                     services.AddDbContext<LAVDataContext>(options =>
                         options.UseSqlServer(hostContext.Configuration.GetConnectionString("ConnectionString")));
 
-                    services.AddTransient<EventService>();
-                    services.AddTransient<SlackClient>();
-                    services.AddTransient<SlackIntegrationService>();
+                    services.AddTransient<IEventService, EventService>();
+                    services.AddTransient<ISlackClient, SlackClient>();
+                    services.AddTransient<ISlackIntegrationService, SlackIntegrationService>();
                     services.AddScoped<LogViewerWorker>();
                     services.AddHttpClient();
                     

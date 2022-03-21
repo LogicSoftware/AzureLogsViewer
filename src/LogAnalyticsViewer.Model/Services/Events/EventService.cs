@@ -11,7 +11,13 @@ using LogAnalyticsViewer.Model.Entities;
 
 namespace LogAnalyticsViewer.Model.Services.Events
 {
-    public class EventService
+    public interface IEventService
+    {
+        Task<List<Event>> GetEventsForWorker(string query, int timeInMinutes);
+        Task<List<Event>> GetEventsForClient(List<string> queries, DateTime? from, DateTime? to, List<MessageFilter> filters = null);
+    }
+
+    public class EventService : IEventService
     {
         private readonly ILogger<EventService> _logger;
         private readonly LogAnalyticsSettings _laSettings;

@@ -8,7 +8,12 @@ namespace LogAnalyticsViewer.Worker.SlackIntegration
 {
     //A simple C# class to post messages to a Slack channel
     //Note: This class uses the Newtonsoft Json.NET serializer available via NuGet
-    public class SlackClient
+    public interface ISlackClient
+    {
+        Task PostMessage(string token, string text, string channel);
+    }
+
+    public class SlackClient : ISlackClient
     {
         private readonly HttpClient _httpClient;
         public SlackClient(HttpClient httpClient)

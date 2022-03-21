@@ -12,21 +12,20 @@ using MoreLinq.Extensions;
 
 namespace LogAnalyticsViewer.Worker;
 
-class LogViewerWorker
+public class LogViewerWorker
 {
     private readonly LogViewerSettings _settings;
 
     private readonly LAVDataContext _dbContext;
-    private readonly EventService _eventService;
-    private readonly SlackIntegrationService _slackService;
+    private readonly IEventService _eventService;
+    private readonly ISlackIntegrationService _slackService;
 
-    public LogViewerWorker(LAVDataContext dbContext, EventService eventService, SlackIntegrationService slackService, IOptionsMonitor<LogViewerSettings> settings)
+    public LogViewerWorker(LAVDataContext dbContext, IEventService eventService, ISlackIntegrationService slackService, IOptionsMonitor<LogViewerSettings> settings)
     {
         _dbContext = dbContext;
         _eventService = eventService;
         _slackService = slackService;
         _settings = settings.CurrentValue;
-
     }
     public async Task DoWork()
     {
@@ -41,7 +40,7 @@ class LogViewerWorker
 
             var newEvents = new List<Event>();
 
-            var oldBatch = query.Events;
+            var oldBatch = query.Events.ToList();
             
             newBatch
                 .FullJoin(oldBatch,

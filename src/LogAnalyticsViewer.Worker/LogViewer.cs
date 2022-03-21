@@ -11,16 +11,28 @@ namespace LogAnalyticsViewer.Worker
     public class LogViewer : BackgroundService
     {
         private readonly IServiceScopeFactory _scopeFactory;
-        private readonly int _delayInMilliseconds;
+        private readonly TimeSpan _delay;
         private readonly ILogger<LogViewer> _logger;
+        private readonly IHostApplicationLifetime _hostApplicationLifetime;
+        private readonly bool _singleDump;
 
         public LogViewer(
             IOptionsMonitor<LogViewerSettings> settings,
             IServiceScopeFactory scopeFactory,
-            ILogger<LogViewer> logger
-        ) => 
-            (_scopeFactory, _logger, _delayInMilliseconds) =
-            (scopeFactory, logger, settings.CurrentValue.DelayBetweenDumpsInMinutes * 60 * 1000);
+            ILogger<LogViewer> logger,
+            IHostApplicationLifetime hostApplicationLifetime
+        )
+        {
+            _scopeFactory = scopeFactory;
+            _delay = TimeSpan.FromMinutes(settings.CurrentValue.DumpSizeInMinutes);
+            _logger = logger;
+            _hostApplicationLifetime = hostApplicationLifetime;
+            _singleDump = settings.CurrentValue.SingleDump;
+            if (_singleDump)
+            {
+                _logger.LogInformation("Single dump mode enabled");
+            }
+        }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
@@ -35,8 +47,13 @@ namespace LogAnalyticsViewer.Worker
                     _logger.LogError(ex, "Errors notification fails");
                 }
 
-                await Task.Delay(_delayInMilliseconds, stoppingToken);
+                if (_singleDump)
+                {
+                    break;
+                }
+                await Task.Delay(_delay, stoppingToken);
             }
+            _hostApplicationLifetime.StopApplication();
         }
 
         private async Task DoWork()
