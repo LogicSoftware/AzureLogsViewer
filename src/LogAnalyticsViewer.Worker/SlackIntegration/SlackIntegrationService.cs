@@ -4,7 +4,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 
 namespace LogAnalyticsViewer.Worker.SlackIntegration
@@ -60,13 +59,13 @@ namespace LogAnalyticsViewer.Worker.SlackIntegration
             }
             catch (Exception ex)
             {
-                _logger.LogError(string.Format("Fail post slack message for channel {0}", channel), ex);
+                _logger.LogError(ex, "Fail post slack message for channel {Channel}", channel);
             }
         }
 
         private string Substring(string message) => message.Length <= _settings.MessageLength
             ? message
-            : $"{message.Substring(0, _settings.MessageLength)}...";
+            : $"{message[.._settings.MessageLength]}...";
     }
 }
 

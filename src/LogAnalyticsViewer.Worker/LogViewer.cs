@@ -21,7 +21,7 @@ namespace LogAnalyticsViewer.Worker
         private readonly int _delayInMilliseconds;
         private readonly ILogger<LogViewer> _logger;
                 
-        private Dictionary</*QueryId*/int, List<Event>> _events = new Dictionary<int, List<Event>>();
+        private readonly Dictionary</*QueryId*/int, List<Event>> _events = new Dictionary<int, List<Event>>();
 
         public LogViewer(
             IOptionsMonitor<LogViewerSettings> settings,

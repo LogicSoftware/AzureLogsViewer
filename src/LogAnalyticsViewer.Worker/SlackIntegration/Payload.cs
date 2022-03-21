@@ -1,14 +1,17 @@
 using Newtonsoft.Json;
 
 //This class serializes into the Json payload required by Slack Incoming WebHooks
-internal class Payload
+namespace LogAnalyticsViewer.Worker.SlackIntegration
 {
-    [JsonProperty("channel")]
-    public string Channel { get; set; }
+    internal class Payload
+    {
+        [JsonProperty("channel")]
+        public string Channel { get; set; }
 
-    [JsonProperty("username")]
-    public string Username { get; set; }
+        [JsonProperty("username")]
+        public string Username { get; set; }
 
-    [JsonProperty("text")]
-    public string Text { get; set; }
+        [JsonProperty("text")]
+        public string Text { get; set; }
+    }
 }

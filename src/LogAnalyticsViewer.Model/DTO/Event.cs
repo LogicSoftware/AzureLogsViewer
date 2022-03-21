@@ -17,7 +17,7 @@ namespace LogAnalyticsViewer.Model.DTO
             Source = values[2];
         }
 
-        public DateTime TimeGenerated { get; set; }
+        public DateTime TimeGenerated { get; init; }
         public string Message { get; set; }
         public string Source { get; set; }
 

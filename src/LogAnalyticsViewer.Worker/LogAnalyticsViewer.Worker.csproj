@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Worker">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
     <UserSecretsId>dotnet-LogAnalyticsViewer.Worker-1C19E355-EDFC-4265-92D3-CBC837B043B8</UserSecretsId>
   </PropertyGroup>
 

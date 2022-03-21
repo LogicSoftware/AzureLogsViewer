@@ -1,9 +1,7 @@
 ﻿using F23.StringSimilarity;
 using LogAnalyticsViewer.Model.DTO;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace LogAnalyticsViewer.Worker.SlackIntegration
 {
@@ -47,5 +45,7 @@ namespace LogAnalyticsViewer.Worker.SlackIntegration
 
             return result;
         }
+        
+        
     }
 }
