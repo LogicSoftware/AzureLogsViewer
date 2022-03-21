@@ -1,7 +1,7 @@
 ﻿using F23.StringSimilarity;
-using LogAnalyticsViewer.Model.DTO;
 using System.Collections.Generic;
 using System.Linq;
+using LogAnalyticsViewer.Model.Entities;
 
 namespace LogAnalyticsViewer.Worker.SlackIntegration
 {

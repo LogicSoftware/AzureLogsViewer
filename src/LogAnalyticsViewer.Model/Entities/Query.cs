@@ -1,10 +1,15 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace LogAnalyticsViewer.Model.Entities
 {
     public class Query
     {
+        public Query()
+        {
+            Events = new HashSet<Event>();
+        }
         [Key]
         public int QueryId { get; set; }
         
@@ -20,5 +25,7 @@ namespace LogAnalyticsViewer.Model.Entities
         [Required]
         [Column(TypeName = "varchar(50)")]
         public string Channel { get; set; }
+        
+        public ICollection<Event> Events { get; set; }
     }
 }

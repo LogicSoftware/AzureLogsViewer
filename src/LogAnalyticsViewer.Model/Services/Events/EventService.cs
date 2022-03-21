@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using LogAnalyticsViewer.Model.Entities;
 
 namespace LogAnalyticsViewer.Model.Services.Events
 {
@@ -34,7 +35,7 @@ namespace LogAnalyticsViewer.Model.Services.Events
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Fail get logs for query {query}", ex);
+                _logger.LogError(ex, "Fail get logs for query {Query}", query);
                 return new List<Event>();
             }
         }

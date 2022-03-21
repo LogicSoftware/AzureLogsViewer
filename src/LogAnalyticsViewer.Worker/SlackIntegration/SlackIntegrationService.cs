@@ -1,11 +1,11 @@
-﻿using LogAnalyticsViewer.Model.DTO;
-using LogAnalyticsViewer.Model.Extensions;
+﻿using LogAnalyticsViewer.Model.Extensions;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using LogAnalyticsViewer.Model.Entities;
 
 namespace LogAnalyticsViewer.Worker.SlackIntegration
 {

@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using LogAnalyticsViewer.Model;
 using LogAnalyticsViewer.Model.DTO;
+using LogAnalyticsViewer.Model.Entities;
 using LogAnalyticsViewer.Model.Services.Events;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;

@@ -2,10 +2,13 @@
 using System.Linq;
 using System.Threading.Tasks;
 using LogAnalyticsViewer.Model;
-using LogAnalyticsViewer.Model.DTO;
+using LogAnalyticsViewer.Model.Entities;
+using LogAnalyticsViewer.Model.Services;
 using LogAnalyticsViewer.Model.Services.Events;
 using LogAnalyticsViewer.Worker.SlackIntegration;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using MoreLinq.Extensions;
 
 namespace LogAnalyticsViewer.Worker;
 
@@ -17,9 +20,7 @@ class LogViewerWorker
     private readonly EventService _eventService;
     private readonly SlackIntegrationService _slackService;
 
-    private readonly Dictionary</*QueryId*/int, List<Event>> _events = new();
-
-    public LogViewerWorker( LAVDataContext dbContext, EventService eventService, SlackIntegrationService slackService, IOptionsMonitor<LogViewerSettings> settings)
+    public LogViewerWorker(LAVDataContext dbContext, EventService eventService, SlackIntegrationService slackService, IOptionsMonitor<LogViewerSettings> settings)
     {
         _dbContext = dbContext;
         _eventService = eventService;
@@ -29,18 +30,43 @@ class LogViewerWorker
     }
     public async Task DoWork()
     {
-        var queries = _dbContext.Queries.Where(q => q.Enabled).ToList();
+        var queries = _dbContext.Queries
+            .Include(x => x.Events)
+            .Where(q => q.Enabled)
+            .AsAsyncEnumerable();
 
-        foreach (var query in queries)
+        await foreach (var query in queries)
         {
-            _events.TryGetValue(query.QueryId, out var prevBatch);
-
             var newBatch = await _eventService.GetEventsForWorker(query.QueryText, _settings.DumpSizeInMinutes);
-            var newEvents = newBatch.Except(prevBatch ?? new List<Event>()).ToList();
 
-            await _slackService.ProcessEvents(newEvents, query.Channel, query.QueryId);
+            var newEvents = new List<Event>();
 
-            _events[query.QueryId] = newBatch;
+            var oldBatch = query.Events;
+            
+            newBatch
+                .FullJoin(oldBatch,
+                    x => x,
+                    newEvent =>
+                    {
+                        newEvent.Query = query;
+                        _dbContext.Events.Add(newEvent);
+                        newEvents.Add(newEvent);
+                        return newEvent;
+                    },
+                    oldEvent =>
+                    {
+                        _dbContext.Events.Remove(oldEvent);
+                        return oldEvent;
+                    },
+                    (_, oldEvent) => oldEvent,
+                    new EventContentComparer())
+                .Consume();
+
+            if (newEvents.Any())
+            {
+                await _slackService.ProcessEvents(newEvents, query.Channel, query.QueryId);
+            }
         }
+        await _dbContext.SaveChangesAsync();
     }
 }

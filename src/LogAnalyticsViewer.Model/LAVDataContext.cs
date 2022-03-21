@@ -8,6 +8,7 @@ namespace LogAnalyticsViewer.Model
         public LAVDataContext(DbContextOptions options): base(options) { }
 
         public DbSet<Query> Queries { get; set; }
+        public DbSet<Event> Events { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

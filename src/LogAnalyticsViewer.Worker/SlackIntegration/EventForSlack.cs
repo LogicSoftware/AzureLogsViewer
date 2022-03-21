@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using LogAnalyticsViewer.Model.Entities;
 
 namespace LogAnalyticsViewer.Worker.SlackIntegration
 {
