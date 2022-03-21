@@ -29,9 +29,11 @@ namespace LogAnalyticsViewer.Worker
                     services.AddDbContext<LAVDataContext>(options =>
                         options.UseSqlServer(hostContext.Configuration.GetConnectionString("ConnectionString")));
 
-                    services.AddTransient(typeof(EventService));
-                    services.AddTransient(typeof(SlackClient));
-                    services.AddTransient(typeof(SlackIntegrationService));
+                    services.AddTransient<EventService>();
+                    services.AddTransient<SlackClient>();
+                    services.AddTransient<SlackIntegrationService>();
+                    services.AddScoped<LogViewerWorker>();
+                    services.AddHttpClient();
                     
                     services.AddHostedService<LogViewer>();
                 });
@@ -40,15 +42,12 @@ namespace LogAnalyticsViewer.Worker
 
         private static void UpdateDatabase(IHost app)
         {
-            using (var serviceScope = app.Services
+            using var serviceScope = app.Services
                 .GetRequiredService<IServiceScopeFactory>()
-                .CreateScope())
-            {
-                using (var context = serviceScope.ServiceProvider.GetService<LAVDataContext>())
-                {
-                    context.Database.Migrate();
-                }
-            }
+                .CreateScope();
+            using var context = serviceScope.ServiceProvider.GetRequiredService<LAVDataContext>();
+            
+            context.Database.Migrate();
         }
     }
 }

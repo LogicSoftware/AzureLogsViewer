@@ -5,6 +5,7 @@ using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace LogAnalyticsViewer.Worker.SlackIntegration
 {
@@ -21,18 +22,20 @@ namespace LogAnalyticsViewer.Worker.SlackIntegration
             (_logger, _settings, _client) =
             (logger, settings.CurrentValue, client);
 
-        public void ProcessEvents(List<Event> newEvents, string forChannel, int queryId)
+        public async Task ProcessEvents(List<Event> newEvents, string forChannel, int queryId)
         {
             var processor = new SimilarityProcessor();
             var unique = processor.GetUniqueWithTotal(newEvents);
-                
+
             var result = unique
                 .Take(_settings.RatePerQuery)
-                .Select(e => CreateMessage(e, queryId))
-                .ToList();
+                .Select(e => CreateMessage(e, queryId));
 
-            result.ForEach(message => PostMessage(message, forChannel));
-        }       
+            foreach (var message in result)
+            {
+                await PostMessage(message, forChannel);
+            }
+        }
 
         private string CreateMessage(EventForSlack e, int queryId)
         {
@@ -51,11 +54,11 @@ namespace LogAnalyticsViewer.Worker.SlackIntegration
             return text;
         }
 
-        private void PostMessage(string message, string channel)
+        private async Task PostMessage(string message, string channel)
         {
             try
             {
-                _client.PostMessage(_settings.ApiToken, message, channel);
+                await _client.PostMessage(_settings.ApiToken, message, channel);
             }
             catch (Exception ex)
             {

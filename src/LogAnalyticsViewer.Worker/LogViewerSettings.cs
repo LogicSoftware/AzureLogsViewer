@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace LogAnalyticsViewer.Worker
+﻿namespace LogAnalyticsViewer.Worker
 {
     public class LogViewerSettings
     {
