@@ -38,6 +38,5 @@ steps:
 - task: AzureWebApp@1
   inputs:
     azureSubscription: 'AzureProdSubscription'
-    appType: 'webAppWindows'
     appName: 'ep-azurelogsviewer-production'
     package: '$(System.DefaultWorkingDirectory)/**/*.zip'
