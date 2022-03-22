@@ -1,0 +1,39 @@
+trigger:
+- master
+
+variables:
+- name: BuildProjects
+  value: '**/*.csproj'
+- name: BuildConfiguration
+  value: release
+
+pool:
+  vmImage: win2022
+
+stages:
+- stage: Check_AzureLogsViewers_Bot_Stage
+  displayName: Check AzureLogsViewer Stage
+  jobs:
+  - job: Check_AzureLogsViewer_Job
+    displayName: Check AzureLogsViewer Job
+    steps:
+    - task: DotNetCoreCLI@2
+      displayName: Restore
+      inputs:
+        command: restore
+        projects: $(BuildProjects)
+        feedsToUse: config
+        nugetConfigPath: src/NuGet.config
+    
+    - task: DotNetCoreCLI@2
+      displayName: Build
+      inputs:
+        projects: $(BuildProjects)
+        arguments: '--configuration $(BuildConfiguration)'
+    
+    - task: DotNetCoreCLI@2
+      displayName: Test
+      inputs:
+        command: test
+        projects: '**/Tests/**/*.csproj'
+        arguments: '--configuration $(BuildConfiguration)'

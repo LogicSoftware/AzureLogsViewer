@@ -1,0 +1,46 @@
+trigger:
+- master
+
+pool:
+  vmImage: win2022
+
+variables:
+- name: BuildProjects
+  value: '**/*.csproj'
+- name: BuildConfiguration
+  value: release
+  
+steps:
+- task: DotNetCoreCLI@2
+  displayName: Restore
+  inputs:
+    command: restore
+    projects: '$(BuildProjects)'
+    feedsToUse: config
+    nugetConfigPath: src/NuGet.config
+
+- task: DotNetCoreCLI@2
+  displayName: Build
+  inputs:
+    projects: '$(BuildProjects)'
+    arguments: '--configuration $(BuildConfiguration)'
+
+# - task: DotNetCoreCLI@2
+#   displayName: Test
+#   inputs:
+#     command: test
+#     projects: '$(Parameters.UnitTestProjects)'
+#     arguments: '--configuration $(BuildConfiguration)'
+
+- task: DotNetCoreCLI@2
+  displayName: Publish
+  inputs:
+    command: publish
+    publishWebProjects: True
+    arguments: '--configuration $(BuildConfiguration) --output "$(build.artifactstagingdirectory)"'
+    zipAfterPublish: True
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Artifact'
+  inputs:
+    PathtoPublish: '$(build.artifactstagingdirectory)'
