@@ -2,7 +2,7 @@ trigger:
 - master
 
 pool:
-  vmImage: win2022
+  vmImage: win-2022
 
 variables:
 - name: BuildProjects
