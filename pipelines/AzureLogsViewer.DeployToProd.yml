@@ -11,32 +11,36 @@ variables:
   value: '**/*.csproj'
 - name: BuildConfiguration
   value: release
-  
-steps:
-- task: DotNetCoreCLI@2
-  displayName: Restore
-  inputs:
-    command: restore
-    projects: '$(BuildProjects)'
-    feedsToUse: config
-    nugetConfigPath: src/NuGet.config
 
-- task: DotNetCoreCLI@2
-  displayName: Build
-  inputs:
-    projects: '$(BuildProjects)'
-    arguments: '--configuration $(BuildConfiguration)'
-
-- task: DotNetCoreCLI@2
-  displayName: Publish
-  inputs:
-    command: publish
-    publishWebProjects: True
-    arguments: '--configuration $(BuildConfiguration) --output "$(build.artifactstagingdirectory)"'
-    zipAfterPublish: True
-
-- task: AzureWebApp@1
-  inputs:
-    azureSubscription: 'AzureProdSubscription'
-    appName: 'ep-azurelogsviewer-production'
-    package: '$(System.DefaultWorkingDirectory)/**/*.zip'
+stages:
+- stage: Deploy_AzureLogsViewers_Bot_Stage
+  displayName: Deploy AzureLogsViewer Stage
+  jobs:
+  - job: Deploy_AzureLogsViewer_Job
+    displayName: Deploy AzureLogsViewer Job
+    steps:
+    - task: DotNetCoreCLI@2
+      displayName: Restore
+      inputs:
+        command: restore
+        projects: '$(BuildProjects)'
+        feedsToUse: config
+        nugetConfigPath: src/NuGet.config
+    
+    - task: DotNetCoreCLI@2
+      displayName: Build
+      inputs:
+        projects: '$(BuildProjects)'
+        arguments: '--configuration $(BuildConfiguration)'
+    
+    - task: DotNetCoreCLI@2
+      displayName: Publish
+      inputs:
+        command: publish
+        publishWebProjects: True
+    
+    - task: AzureWebApp@1
+      inputs:
+        azureSubscription: 'AzureProdSubscription'
+        appName: 'ep-azurelogsviewer-production'
+        package: '$(System.DefaultWorkingDirectory)/**/*.zip'
