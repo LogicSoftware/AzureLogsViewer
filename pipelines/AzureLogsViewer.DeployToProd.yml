@@ -1,6 +1,8 @@
 trigger:
 - master
 
+pr: none
+
 pool:
   vmImage: windows-2022
 
@@ -25,13 +27,6 @@ steps:
     projects: '$(BuildProjects)'
     arguments: '--configuration $(BuildConfiguration)'
 
-# - task: DotNetCoreCLI@2
-#   displayName: Test
-#   inputs:
-#     command: test
-#     projects: '$(Parameters.UnitTestProjects)'
-#     arguments: '--configuration $(BuildConfiguration)'
-
 - task: DotNetCoreCLI@2
   displayName: Publish
   inputs:
@@ -40,7 +35,9 @@ steps:
     arguments: '--configuration $(BuildConfiguration) --output "$(build.artifactstagingdirectory)"'
     zipAfterPublish: True
 
-- task: PublishBuildArtifacts@1
-  displayName: 'Publish Artifact'
+- task: AzureWebApp@1
   inputs:
-    PathtoPublish: '$(build.artifactstagingdirectory)'
+    azureSubscription: 'AzureProdSubscription'
+    appType: 'webAppWindows'
+    appName: 'ep-azurelogsviewer-production'
+    package: '$(System.DefaultWorkingDirectory)/**/*.zip'
