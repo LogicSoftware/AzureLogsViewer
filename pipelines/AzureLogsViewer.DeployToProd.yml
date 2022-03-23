@@ -80,7 +80,7 @@ stages:
     - task: PublishPipelineArtifact@1
       displayName: Publish All Artifacts
       inputs:
-        targetPath: '$(Build.ArtifactStagingDirectory)'
+        targetPath: '$(Build.ArtifactStagingDirectory)/build.zip'
         publishLocation: 'pipeline'
 
     - task: DownloadPipelineArtifact@2
