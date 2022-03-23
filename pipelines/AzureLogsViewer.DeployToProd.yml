@@ -59,6 +59,7 @@ stages:
       inputs:
         Contents: 'src/LogAnalyticsViewer.Worker/settings.job'
         TargetFolder: '$(Build.ArtifactStagingDirectory)/App_Data/jobs/triggered/$(WebJobName)/'
+        flattenFolders: true
         
     - task: PowerShell@2
       displayName: Generate run.cmd For WebJob
