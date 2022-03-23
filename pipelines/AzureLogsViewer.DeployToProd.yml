@@ -41,7 +41,8 @@ stages:
         command: publish
         publishWebProjects: True
         arguments: '--configuration $(BuildConfiguration) --output "$(build.artifactstagingdirectory)"'
-        zipAfterPublish: False        
+        zipAfterPublish: False
+        modifyOutputPath: False
 
     - task: DotNetCoreCLI@2
       displayName: Publish Worker
@@ -49,14 +50,15 @@ stages:
         command: publish
         publishWebProjects: false
         projects: 'src/LogAnalyticsViewer.Worker/LogAnalyticsViewer.Worker.csproj'
-        arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)/WebJob/App_Data/jobs/triggered/$(WebJobName)'
+        arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)/App_Data/jobs/triggered/$(WebJobName)'
         zipAfterPublish: False
+        modifyOutputPath: False
 
     - task: CopyFiles@2
         displayName: Create Schedule For WebJob
         inputs:
           Contents: '**/*.job'
-          TargetFolder: '$(Build.ArtifactStagingDirectory)/WebJob/App_Data/jobs/triggered/$(WebJobName)/'    
+          TargetFolder: '$(Build.ArtifactStagingDirectory)/App_Data/jobs/triggered/$(WebJobName)/'    
 
     - task: PowerShell@2
       displayName: Generate run.cmd For WebJob
@@ -64,7 +66,7 @@ stages:
         targetType: 'inline'
         script: '"$(WebJobName).exe /LogViewer:SingleDump=true" | Out-File run.cmd -Encoding ASCII; $LASTEXITCODE'
         pwsh: true
-        workingDirectory: '$(Build.ArtifactStagingDirectory)/WebJob/App_Data/jobs/triggered/$(WebJobName)'
+        workingDirectory: '$(Build.ArtifactStagingDirectory)/App_Data/jobs/triggered/$(WebJobName)'
 
     - task: ArchiveFiles@2
       displayName: Zip Desired Files
