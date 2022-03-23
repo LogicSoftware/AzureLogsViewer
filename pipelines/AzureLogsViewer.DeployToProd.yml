@@ -93,5 +93,5 @@ stages:
         azureSubscription: 'AzureProdSubscription'
         appType: 'webApp'
         appName: 'ep-azurelogsviewer-production'
-        package: '$(build.artifactstagingdirectory)/**/*.zip'
+        package: '$(build.artifactstagingdirectory)/build.zip'
         deploymentMethod: 'zipDeploy'
