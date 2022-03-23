@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Configuration;
 using LogAnalyticsViewer.Worker.SlackIntegration;
+using Microsoft.Extensions.Logging;
 
 namespace LogAnalyticsViewer.Worker
 {
@@ -36,6 +37,7 @@ namespace LogAnalyticsViewer.Worker
                     services.AddHttpClient();
                     
                     services.AddHostedService<LogViewer>();
+                    services.AddLogging(lb => lb.AddAzureWebAppDiagnostics());
                 });
 
 

@@ -12,7 +12,7 @@ variables:
 - name: BuildConfiguration
   value: release
 - name: WebJobName
-  value: AzureLogsViewer.Worker
+  value: LogAnalyticsViewer.Worker
 
 stages:
 - stage: Deploy_AzureLogsViewers_Bot_Stage
