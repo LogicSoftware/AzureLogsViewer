@@ -55,10 +55,10 @@ stages:
         modifyOutputPath: False
 
     - task: CopyFiles@2
-        displayName: Create Schedule For WebJob
-        inputs:
-          Contents: '**/*.job'
-          TargetFolder: '$(Build.ArtifactStagingDirectory)/App_Data/jobs/triggered/$(WebJobName)/'    
+      displayName: Create Schedule For WebJob
+      inputs:
+        Contents: '**/*.job'
+        TargetFolder: '$(Build.ArtifactStagingDirectory)/App_Data/jobs/triggered/$(WebJobName)/'    
 
     - task: PowerShell@2
       displayName: Generate run.cmd For WebJob
@@ -91,6 +91,7 @@ stages:
     - task: AzureWebApp@1
       inputs:
         azureSubscription: 'AzureProdSubscription'
+        appType: 'webApp'
         appName: 'ep-azurelogsviewer-production'
         package: '$(build.artifactstagingdirectory)/**/*.zip'
         deploymentMethod: 'zipDeploy'
