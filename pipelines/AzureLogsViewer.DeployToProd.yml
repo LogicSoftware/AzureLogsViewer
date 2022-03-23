@@ -41,12 +41,6 @@ stages:
         arguments: '--configuration $(BuildConfiguration) --output "$(build.artifactstagingdirectory)"'
         zipAfterPublish: True
 
-    - task: PublishBuildArtifacts@1
-      displayName: 'Publish Artifact'
-      inputs:
-        targetPath: '$(Build.ArtifactStagingDirectory)' 
-        artifactName: drop
-
     - task: AzureWebApp@1
       inputs:
         azureSubscription: 'AzureProdSubscription'
