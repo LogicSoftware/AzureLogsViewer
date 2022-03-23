@@ -53,10 +53,10 @@ stages:
         zipAfterPublish: False
 
     - task: CopyFiles@2
-        displayName: Create Schedule For WebJob
-        inputs:
-          Contents: '**/*.job'
-          TargetFolder: '$(Build.ArtifactStagingDirectory)/WebJob/App_Data/jobs/triggered/$(WebJobName)/'    
+      displayName: Create Schedule For WebJob
+      inputs:
+        Contents: '**/*.job'
+        TargetFolder: '$(Build.ArtifactStagingDirectory)/WebJob/App_Data/jobs/triggered/$(WebJobName)/'    
 
     - task: PowerShell@2
       displayName: Generate run.cmd For WebJob
