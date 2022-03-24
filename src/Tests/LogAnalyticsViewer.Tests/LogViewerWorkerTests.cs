@@ -48,7 +48,7 @@ public class LogViewerWorkerTests : DbTestBase
         dataContext.Queries.Add(query);
         await dataContext.SaveChangesAsync();
 
-        var mocker = new AutoMocker(MockBehavior.Strict);
+        var mocker = new AutoMocker();
         mocker.Use(dataContext);
 
         var settings = new LogViewerSettings();

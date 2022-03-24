@@ -7,6 +7,7 @@ using LogAnalyticsViewer.Model.Services;
 using LogAnalyticsViewer.Model.Services.Events;
 using LogAnalyticsViewer.Worker.SlackIntegration;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MoreLinq.Extensions;
 
@@ -19,14 +20,17 @@ public class LogViewerWorker
     private readonly LAVDataContext _dbContext;
     private readonly IEventService _eventService;
     private readonly ISlackIntegrationService _slackService;
+    private readonly ILogger<LogViewerWorker> _logger;
 
-    public LogViewerWorker(LAVDataContext dbContext, IEventService eventService, ISlackIntegrationService slackService, IOptionsMonitor<LogViewerSettings> settings)
+    public LogViewerWorker(LAVDataContext dbContext, IEventService eventService, ISlackIntegrationService slackService, IOptionsMonitor<LogViewerSettings> settings, ILogger<LogViewerWorker> logger)
     {
         _dbContext = dbContext;
         _eventService = eventService;
         _slackService = slackService;
+        _logger = logger;
         _settings = settings.CurrentValue;
     }
+    
     public async Task DoWork()
     {
         var queries = _dbContext.Queries
@@ -61,6 +65,8 @@ public class LogViewerWorker
                     new EventContentComparer())
                 .Consume();
 
+            _logger.LogInformation("Processing {Query}: Got {NewCount} events, have {OldCount} events, report {ReportCount} events", query.DisplayName, newBatch.Count, oldBatch.Count, newEvents.Count);
+            
             if (newEvents.Any())
             {
                 await _slackService.ProcessEvents(newEvents, query.Channel, query.QueryId);
