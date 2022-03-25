@@ -1,19 +1,17 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.30723.0
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29709.97
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzureLogsViewer.Model", "AzureLogsViewer.Model\AzureLogsViewer.Model.csproj", "{BE5C0596-44D3-4DB9-9A66-250B5F8159CB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LogAnalyticsViewer.Model", "LogAnalyticsViewer.Model\LogAnalyticsViewer.Model.csproj", "{0E75DB00-3A32-48B2-B742-1858D4952AD4}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{A2808EC4-3E15-400B-A753-65AE918866C3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LogAnalyticsViewer.Web", "LogAnalyticsViewer.Web\LogAnalyticsViewer.Web.csproj", "{3D03E4AD-6791-4C72-ACC2-BD9FBF9FEB7A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzureLogsViewer.Tests", "Tests\AzureLogsViewer.Tests\AzureLogsViewer.Tests.csproj", "{61B01363-1AA9-450A-88CC-3EC539ECC960}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LogAnalyticsViewer.Worker", "LogAnalyticsViewer.Worker\LogAnalyticsViewer.Worker.csproj", "{4F0DAC40-F26B-4BFF-B3F9-414727968C9E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzureLogsViewer.WorkerConsole", "AzureLogsViewer.WorkerConsole\AzureLogsViewer.WorkerConsole.csproj", "{389EFFA4-7498-462E-9319-28DE28BE1252}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{8875C5D1-2520-47A5-9AED-1A7565E50F36}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzureLogsViewer.Web", "AzureLogsViewer.Web\AzureLogsViewer.Web.csproj", "{4BB51A05-4630-44FE-AB46-3B7A5B20DE42}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzureLogsViewer.Worker", "AzureLogsViewer.Worker\AzureLogsViewer.Worker.csproj", "{990FFBE6-AAF9-49B9-8795-F2F6F648B297}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LogAnalyticsViewer.Tests", "Tests\LogAnalyticsViewer.Tests\LogAnalyticsViewer.Tests.csproj", "{1667BF51-2E4D-4BBE-9FD0-1F7859345A94}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,31 +19,30 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{BE5C0596-44D3-4DB9-9A66-250B5F8159CB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BE5C0596-44D3-4DB9-9A66-250B5F8159CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BE5C0596-44D3-4DB9-9A66-250B5F8159CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BE5C0596-44D3-4DB9-9A66-250B5F8159CB}.Release|Any CPU.Build.0 = Release|Any CPU
-		{61B01363-1AA9-450A-88CC-3EC539ECC960}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{61B01363-1AA9-450A-88CC-3EC539ECC960}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{61B01363-1AA9-450A-88CC-3EC539ECC960}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{61B01363-1AA9-450A-88CC-3EC539ECC960}.Release|Any CPU.Build.0 = Release|Any CPU
-		{389EFFA4-7498-462E-9319-28DE28BE1252}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{389EFFA4-7498-462E-9319-28DE28BE1252}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{389EFFA4-7498-462E-9319-28DE28BE1252}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{389EFFA4-7498-462E-9319-28DE28BE1252}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4BB51A05-4630-44FE-AB46-3B7A5B20DE42}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4BB51A05-4630-44FE-AB46-3B7A5B20DE42}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4BB51A05-4630-44FE-AB46-3B7A5B20DE42}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4BB51A05-4630-44FE-AB46-3B7A5B20DE42}.Release|Any CPU.Build.0 = Release|Any CPU
-		{990FFBE6-AAF9-49B9-8795-F2F6F648B297}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{990FFBE6-AAF9-49B9-8795-F2F6F648B297}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{990FFBE6-AAF9-49B9-8795-F2F6F648B297}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{990FFBE6-AAF9-49B9-8795-F2F6F648B297}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0E75DB00-3A32-48B2-B742-1858D4952AD4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0E75DB00-3A32-48B2-B742-1858D4952AD4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0E75DB00-3A32-48B2-B742-1858D4952AD4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0E75DB00-3A32-48B2-B742-1858D4952AD4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3D03E4AD-6791-4C72-ACC2-BD9FBF9FEB7A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3D03E4AD-6791-4C72-ACC2-BD9FBF9FEB7A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3D03E4AD-6791-4C72-ACC2-BD9FBF9FEB7A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3D03E4AD-6791-4C72-ACC2-BD9FBF9FEB7A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4F0DAC40-F26B-4BFF-B3F9-414727968C9E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4F0DAC40-F26B-4BFF-B3F9-414727968C9E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4F0DAC40-F26B-4BFF-B3F9-414727968C9E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4F0DAC40-F26B-4BFF-B3F9-414727968C9E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1667BF51-2E4D-4BBE-9FD0-1F7859345A94}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1667BF51-2E4D-4BBE-9FD0-1F7859345A94}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1667BF51-2E4D-4BBE-9FD0-1F7859345A94}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1667BF51-2E4D-4BBE-9FD0-1F7859345A94}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{61B01363-1AA9-450A-88CC-3EC539ECC960} = {A2808EC4-3E15-400B-A753-65AE918866C3}
+		{1667BF51-2E4D-4BBE-9FD0-1F7859345A94} = {8875C5D1-2520-47A5-9AED-1A7565E50F36}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {87BE89CF-27C2-4794-A993-3933A20E767C}
 	EndGlobalSection
 EndGlobal

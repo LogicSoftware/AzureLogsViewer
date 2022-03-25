@@ -1,0 +1,98 @@
+trigger:
+- master
+
+pr: none
+
+pool:
+  vmImage: windows-2022
+
+variables:
+- name: BuildProjects
+  value: '**/*.csproj'
+- name: BuildConfiguration
+  value: release
+- name: WebJobName
+  value: LogAnalyticsViewer.Worker
+
+stages:
+- stage: Deploy_AzureLogsViewers_Bot_Stage
+  displayName: Deploy AzureLogsViewer Stage
+  jobs:
+  - job: Deploy_AzureLogsViewer_Job
+    displayName: Deploy AzureLogsViewer Job
+    steps:
+    - task: DotNetCoreCLI@2
+      displayName: Restore
+      inputs:
+        command: restore
+        projects: '$(BuildProjects)'
+        feedsToUse: config
+        nugetConfigPath: src/NuGet.config
+    
+    - task: DotNetCoreCLI@2
+      displayName: Build
+      inputs:
+        projects: '$(BuildProjects)'
+        arguments: '--configuration $(BuildConfiguration)'
+    
+    - task: DotNetCoreCLI@2
+      displayName: Publish Web
+      inputs:
+        command: publish
+        publishWebProjects: True
+        arguments: '--configuration $(BuildConfiguration) --output "$(build.artifactstagingdirectory)"'
+        zipAfterPublish: False
+        modifyOutputPath: False
+
+    - task: DotNetCoreCLI@2
+      displayName: Publish Worker
+      inputs:
+        command: publish
+        publishWebProjects: false
+        projects: 'src/LogAnalyticsViewer.Worker/LogAnalyticsViewer.Worker.csproj'
+        arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)/App_Data/jobs/triggered/$(WebJobName)'
+        zipAfterPublish: False
+        modifyOutputPath: False
+
+    - task: CopyFiles@2
+      displayName: Create Schedule For WebJob
+      inputs:
+        Contents: 'src/LogAnalyticsViewer.Worker/settings.job'
+        TargetFolder: '$(Build.ArtifactStagingDirectory)/App_Data/jobs/triggered/$(WebJobName)/'
+        flattenFolders: true
+        
+    - task: PowerShell@2
+      displayName: Generate run.cmd For WebJob
+      inputs:
+        targetType: 'inline'
+        script: '"$(WebJobName).exe /LogViewer:SingleDump=true" | Out-File run.cmd -Encoding ASCII; $LASTEXITCODE'
+        pwsh: true
+        workingDirectory: '$(Build.ArtifactStagingDirectory)/App_Data/jobs/triggered/$(WebJobName)'
+
+    - task: ArchiveFiles@2
+      displayName: Zip Desired Files
+      inputs:
+        rootFolderOrFile: '$(Build.ArtifactStagingDirectory)/'
+        includeRootFolder: false
+        archiveType: 'zip'
+        archiveFile: '$(Build.ArtifactStagingDirectory)/build.zip'
+        replaceExistingArchive: true
+
+    - task: PublishPipelineArtifact@1
+      displayName: Publish All Artifacts
+      inputs:
+        targetPath: '$(Build.ArtifactStagingDirectory)/build.zip'
+        publishLocation: 'pipeline'
+
+    - task: DownloadPipelineArtifact@2
+      displayName: 'Download Build Artifact'
+      inputs:
+        path: '$(System.ArtifactsDirectory)'
+    
+    - task: AzureWebApp@1
+      inputs:
+        azureSubscription: 'AzureProdSubscription'
+        appType: 'webApp'
+        appName: 'ep-azurelogsviewer-production'
+        package: '$(build.artifactstagingdirectory)/build.zip'
+        deploymentMethod: 'zipDeploy'

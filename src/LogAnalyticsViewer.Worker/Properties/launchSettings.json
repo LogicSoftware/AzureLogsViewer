@@ -1,0 +1,11 @@
+﻿{
+  "profiles": {
+    "LogAnalyticsViewer.Worker": {
+      "commandName": "Project",
+      "commandLineArgs": "/LogViewer:SingleDump=true",
+      "environmentVariables": {
+        "DOTNET_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}
