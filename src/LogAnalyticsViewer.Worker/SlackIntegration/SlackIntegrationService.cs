@@ -46,7 +46,7 @@ namespace LogAnalyticsViewer.Worker.SlackIntegration
         {
             var link = _settings.EventUrlFormat
                 .Replace("{From}", e.TimeGenerated.ToCommonFormat())
-                .Replace("{To}", e.TimeGenerated.ToCommonFormat())
+                .Replace("{To}", e.TimeGenerated.AddMilliseconds(1).ToCommonFormat())
                 .Replace("{QueryId}", queryId.ToString());
                 
             var text = _settings.MessagePattern
