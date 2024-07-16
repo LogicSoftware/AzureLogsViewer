@@ -91,7 +91,7 @@ stages:
     
     - task: AzureWebApp@1
       inputs:
-        azureSubscription: 'AzureProdSubscription'
+        azureSubscription: 'EP_Deploy_Prod'
         appType: 'webApp'
         appName: 'ep-azurelogsviewer-production'
         package: '$(build.artifactstagingdirectory)/build.zip'
